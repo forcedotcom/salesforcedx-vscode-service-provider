@@ -1,133 +1,55 @@
 {
-  "name": "@salesforce/library-template",
+  "name": "@salesforce/vscode-service-provider",
   "version": "0.0.1",
-  "description": "Template npm library for Salesforce CLI and VSCode Extensions",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "description": "Library that provides access to Salesforce VSCode Service Provider",
+  "main": "index.js",
+  "author": "Peter Hale <peter.hale@salesforce.com>",
   "license": "BSD-3-Clause",
-  "scripts": {
-    "build": "wireit",
-    "clean": "sf-clean",
-    "clean-all": "sf-clean all",
-    "compile": "wireit",
-    "docs": "sf-docs",
-    "format": "wireit",
-    "link-check": "wireit",
-    "lint": "wireit",
-    "lint-fix": "yarn sf-lint --fix",
-    "prepack": "sf-prepack",
-    "prepare": "sf-install",
-    "test": "wireit",
-    "test:nuts": "nyc mocha \"**/*.nut.ts\" --slow 4500 --timeout 600000 --parallel",
-    "test:nuts:local": "mocha \"**/local/*.nut.ts\" --slow 4500 --timeout 600000 --parallel",
-    "test:only": "wireit"
-  },
-  "repository": "forcedotcom/library-template",
-  "bugs": {
-    "url": "https://github.com/forcedotcom/library-template/issues"
-  },
-  "homepage": "https://github.com/forcedotcom/library-template#readme",
-  "files": [
-    "lib",
-    "!lib/**/*.map",
-    "messages"
-  ],
-  "dependencies": {
-    "@salesforce/core": "^6.7.0",
-    "@salesforce/kit": "^3.0.15",
-    "@salesforce/ts-types": "^2.0.9"
-  },
   "devDependencies": {
-    "@salesforce/cli-plugins-testkit": "^5.1.10",
-    "@salesforce/dev-scripts": "^8.4.2",
-    "eslint-plugin-sf-plugin": "^1.17.4",
-    "ts-node": "^10.9.2",
-    "ts-patch": "^3.1.2",
-    "typescript": "^5.4.2"
+    "@commitlint/config-conventional": "^19.1.0",
+    "@types/chai": "^4.3.10",
+    "@types/istanbul-lib-coverage": "^2.0.6",
+    "@types/istanbul-lib-report": "^3.0.3",
+    "@types/jest": "^29.5.12",
+    "@types/mocha": "^10.0.4",
+    "@types/node": "^18",
+    "@types/sinon": "^17.0.1",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
+    "chai": "^4.3.10",
+    "commitlint": "^18.2.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^8.53.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-header": "^3.0.0",
+    "eslint-plugin-jsdoc": "^46.8.2",
+    "eslint-plugin-prettier": "^5.0.1",
+    "husky": "^8.0.0",
+    "jest": "^29.7.0",
+    "lint-staged": "^15.0.2",
+    "mocha": "^10.2.0",
+    "mocha-junit-reporter": "^2.2.1",
+    "nyc": "^15.1.0",
+    "prettier": "^3.0.3",
+    "shx": "^0.3.4",
+    "sinon": "^17.0.1",
+    "source-map-support": "^0.5.16",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.7.0",
+    "typescript": "^5.2.2",
+    "vscode": "^1.1.37",
+    "vscode-test": "^1.6.1"
   },
-  "publishConfig": {
-    "access": "public"
-  },
-  "wireit": {
-    "build": {
-      "dependencies": [
-        "compile",
-        "lint"
-      ]
-    },
-    "compile": {
-      "command": "tsc -p . --pretty --incremental",
-      "files": [
-        "src/**/*.ts",
-        "**/tsconfig.json",
-        "messages/**"
-      ],
-      "output": [
-        "lib/**",
-        "*.tsbuildinfo"
-      ],
-      "clean": "if-file-deleted"
-    },
-    "format": {
-      "command": "prettier --write \"+(src|test|schemas)/**/*.+(ts|js|json)|command-snapshot.json\"",
-      "files": [
-        "src/**/*.ts",
-        "test/**/*.ts",
-        "schemas/**/*.json",
-        "command-snapshot.json",
-        ".prettier*"
-      ],
-      "output": []
-    },
-    "lint": {
-      "command": "eslint src test --color --cache --cache-location .eslintcache",
-      "files": [
-        "src/**/*.ts",
-        "test/**/*.ts",
-        "messages/**",
-        "**/.eslint*",
-        "**/tsconfig.json"
-      ],
-      "output": []
-    },
-    "test:compile": {
-      "command": "tsc -p \"./test\" --pretty",
-      "files": [
-        "test/**/*.ts",
-        "**/tsconfig.json"
-      ],
-      "output": []
-    },
-    "test": {
-      "dependencies": [
-        "test:only",
-        "test:compile",
-        "link-check"
-      ]
-    },
-    "test:only": {
-      "command": "nyc mocha \"test/**/*.test.ts\"",
-      "env": {
-        "FORCE_COLOR": "2"
-      },
-      "files": [
-        "test/**/*.ts",
-        "src/**/*.ts",
-        "**/tsconfig.json",
-        ".mocha*",
-        "!*.nut.ts",
-        ".nycrc"
-      ],
-      "output": []
-    },
-    "link-check": {
-      "command": "node -e \"process.exit(process.env.CI ? 0 : 1)\" || linkinator \"**/*.md\" --skip \"CHANGELOG.md|node_modules|test/|confluence.internal.salesforce.com|my.salesforce.com|%s\" --markdown --retry --directory-listing --verbosity error",
-      "files": [
-        "./*.md",
-        "./!(CHANGELOG).md",
-        "messages/**/*.md"
-      ],
-      "output": []
-    }
+  "scripts": {
+    "test": "jest --coverage",
+    "build": "shx rm -rf lib && tsc -b",
+    "commit-init": "commitizen init cz-conventional-changelog --save-dev --save-exact --force",
+    "commit": "git-cz",
+    "format": "prettier --config ./.prettierrc --write './{src,test,scripts}/**/*.{ts,js,json}'",
+    "lint": "eslint -c .eslintrc.json --ext .ts ./src ./test",
+    "package": "yarn pack",
+    "prettier": "prettier ./**/*.{js,json,ts,md} --write",
+    "format:check": "prettier ./**/*.{js,json,ts,md} --debug-check",
+    "prepare": "husky install"
   }
 }

@@ -1,25 +1,17 @@
-# library-template
+# Salesforce Apex Library
 
-Template npm library for Salesforce CLI and VSCode Extensions
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
-[![NPM](https://img.shields.io/npm/v/@salesforce/library-template.svg?label=@salesforce/library-template)](https://www.npmjs.com/package/@salesforce/library-template) [![Downloads/week](https://img.shields.io/npm/dw/@salesforce/library-template.svg)](https://npmjs.org/package/@salesforce/library-template) [![License](https://img.shields.io/badge/License-BSD%203--Clause-brightgreen.svg)](https://raw.githubusercontent.com/forcedotcom/library-template/main/LICENSE.txt)
+## Introduction
+Typescript library to support the Apex plugin and [Salesforce Extensions for VS Code](https://github.com/forcedotcom/salesforcedx-vscode/).
 
-## Using the template
+Note: Please report any issues via the [Issues tab](https://github.com/forcedotcom/salesforcedx-apex/issues).
 
-This repository provides an opinionated template for an npm library that will be consumed primarily by the Salesforce CLI and VSCode Extensions.
+<br/>
 
-This was created for internal use, but could be modified for use outside of Salesforce.
+## Getting Started
 
-1. Please get in touch with the Platform CLI team. We want to help you develop your library.
-2. Generate your library:
+If you're interested in contributing, take a look at the [CONTRIBUTING](./CONTRIBUTING.md) guide.
 
-   ```
-   sf dev generate library
-   # Answer prompts
-
-   git init -b main
-   git add . && git commit -m "chore: initial commit"
-   ```
-
-3. Create your library's repo in the github org of your choice
-4. When you're ready, replace the contents of this README with the information you want.
+If you're interested in building the plugin and library locally, take a look at the [Developing](./contributing/developing.md) doc.
