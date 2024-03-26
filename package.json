@@ -2,7 +2,7 @@
   "name": "@salesforce/vscode-service-provider",
   "version": "0.0.3",
   "description": "Library that provides access to Salesforce VSCode Service Provider",
-  "main": "index.js",
+  "main": "lib/src/index.js",
   "author": "Peter Hale <peter.hale@salesforce.com>",
   "license": "BSD-3-Clause",
   "devDependencies": {
@@ -34,6 +34,9 @@
     "vscode": "^1.1.37",
     "vscode-test": "^1.6.1"
   },
+  "files": [
+    "lib/src"
+  ],
   "scripts": {
     "test": "jest --coverage",
     "build": "shx rm -rf lib && tsc -b",
@@ -55,5 +58,8 @@
     "./{src,test}/**/*.{ts,js}": [
       "eslint -c .eslintrc.json --fix"
     ]
+  },
+  "engines": {
+    "node": ">=18.18.2"
   }
 }
