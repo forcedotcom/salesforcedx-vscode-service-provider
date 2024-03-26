@@ -141,7 +141,7 @@ export class ServiceProvider {
         // Call VSCode command to materialize service A
         serviceInstance = await vscode.commands.executeCommand<
           ServiceReturnType<T>
-        >('logger.get.instance', ...rest);
+        >('sf.vscode.core.logger.get.instance', ...rest);
         break;
       default:
         throw new Error(`Unsupported service type: ${type}`);
