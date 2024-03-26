@@ -46,4 +46,34 @@ describe('ServiceProvider', () => {
     const hasInstance = ServiceProvider.has(ServiceType.Logger, 'instance1');
     expect(hasInstance).toBe(true);
   });
+  it('should remove a service instance', async () => {
+    (vscode.commands.executeCommand as jest.Mock).mockResolvedValue(
+      'mockService'
+    );
+    await ServiceProvider.getService(ServiceType.Logger, 'instance1');
+    ServiceProvider.remove(ServiceType.Logger, 'instance1');
+    const hasInstance = ServiceProvider.has(ServiceType.Logger, 'instance1');
+    expect(hasInstance).toBe(false);
+  });
+
+  it('should remove a service', async () => {
+    (vscode.commands.executeCommand as jest.Mock).mockResolvedValue(
+      'mockService'
+    );
+    await ServiceProvider.getService(ServiceType.Logger, 'instance1');
+    ServiceProvider.removeService(ServiceType.Logger);
+    const hasService = ServiceProvider.hasService(ServiceType.Logger);
+    expect(hasService).toBe(false);
+  });
+
+  it('should clear all services', async () => {
+    (vscode.commands.executeCommand as jest.Mock).mockResolvedValue(
+      'mockService'
+    );
+    await ServiceProvider.getService(ServiceType.Logger, 'instance1');
+    await ServiceProvider.getService(ServiceType.Logger, 'instance2');
+    ServiceProvider.clearAllServices();
+    const hasService = ServiceProvider.hasService(ServiceType.Logger);
+    expect(hasService).toBe(false);
+  });
 });
