@@ -6,29 +6,6 @@
  */
 
 /**
- * The common set of `Logger` options.
- */
-export interface LoggerOptions {
-  /**
-   * The logger name.
-   */
-  name: string;
-
-  /**
-   * The desired log level.
-   */
-  level?: LoggerLevelValue;
-
-  /**
-   * Create a logger with the fields set
-   */
-  fields?: Fields;
-
-  /** log to memory instead of to a file.  Intended for Unit Testing */
-  useMemoryLogger?: boolean;
-}
-
-/**
  * Standard `Logger` levels.
  *
  * **See** {@link https://getpino.io/#/docs/api?id=logger-level |Logger Levels}

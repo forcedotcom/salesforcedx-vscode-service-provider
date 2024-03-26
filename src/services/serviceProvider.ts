@@ -7,12 +7,25 @@
 import { ServiceParams, ServiceReturnType, ServiceType } from '../types';
 import * as vscode from 'vscode';
 
+/**
+ * The ServiceProvider class is a utility class that provides services of different types.
+ * Each service type can have multiple instances, identified by their instance names.
+ * @class
+ */
 export class ServiceProvider {
   private static serviceMap: Map<
     ServiceType,
     Map<string, ServiceReturnType<ServiceType>>
   > = new Map();
 
+  /**
+   * Retrieves a service instance of the specified type and instance name.
+   * If the service instance does not exist, it will be created.
+   * @param type - The type of the service.
+   * @param instanceName - The name of the service instance.
+   * @param rest - Additional parameters for the service.
+   * @returns The service instance.
+   */
   static async getService<T extends ServiceType>(
     type: T,
     instanceName: string,
@@ -41,10 +54,21 @@ export class ServiceProvider {
     return serviceInstance;
   }
 
+  /**
+   * Checks if a service of the specified type exists.
+   * @param type - The type of the service.
+   * @returns True if the service exists, false otherwise.
+   */
   static hasService<T extends ServiceType>(type: T): boolean {
     return ServiceProvider.serviceMap.has(type);
   }
 
+  /**
+   * Checks if a service instance of the specified type and instance name exists.
+   * @param type - The type of the service.
+   * @param instanceName - The name of the service instance.
+   * @returns True if the service instance exists, false otherwise.
+   */
   static has<T extends ServiceType>(type: T, instanceName: string): boolean {
     if (ServiceProvider.serviceMap.has(type)) {
       const serviceInstances = ServiceProvider.serviceMap.get(type);
@@ -53,6 +77,58 @@ export class ServiceProvider {
     return false;
   }
 
+  /**
+   * Removes all instances of a service of the specified type.
+   * @param type - The type of the service.
+   */
+  static clear<T extends ServiceType>(type: T): void {
+    if (ServiceProvider.serviceMap.has(type)) {
+      ServiceProvider.serviceMap.get(type)?.clear();
+    }
+  }
+
+  /**
+   * Removes a service instance of the specified type and instance name.
+   * @param type - The type of the service.
+   * @param instanceName - The name of the service instance.
+   */
+  static remove<T extends ServiceType>(type: T, instanceName: string): void {
+    if (ServiceProvider.serviceMap.has(type)) {
+      const serviceInstances = ServiceProvider.serviceMap.get(type);
+
+      if (serviceInstances?.has(instanceName)) {
+        serviceInstances.delete(instanceName);
+      }
+    }
+  }
+
+  /**
+   * Removes a service of the specified type, including all its instances.
+   * @param type - The type of the service.
+   */
+  static removeService<T extends ServiceType>(type: T): void {
+    if (ServiceProvider.serviceMap.has(type)) {
+      ServiceProvider.serviceMap.delete(type);
+    }
+  }
+
+  /**
+   * Removes all services, including all their instances.
+   */
+  static clearAllServices(): void {
+    ServiceProvider.serviceMap.clear();
+  }
+
+  /**
+   * Materializes a service instance of the specified type and instance name.
+   * If the service instance does not exist, it will be created.
+   * @private
+   * @param type - The type of the service.
+   * @param instanceName - The name of the service instance.
+   * @param rest - Additional parameters for the service.
+   * @returns The service instance.
+   * @throws {Error} If the service type is unsupported or if the service instance could not be created.
+   */
   private static async materializeService<T extends ServiceType>(
     type: T,
     instanceName: string,
@@ -84,31 +160,5 @@ export class ServiceProvider {
     ServiceProvider.serviceMap.get(type)?.set(instanceName, serviceInstance);
 
     return serviceInstance;
-  }
-
-  static clear<T extends ServiceType>(type: T): void {
-    if (ServiceProvider.serviceMap.has(type)) {
-      ServiceProvider.serviceMap.get(type)?.clear();
-    }
-  }
-
-  static remove<T extends ServiceType>(type: T, instanceName: string): void {
-    if (ServiceProvider.serviceMap.has(type)) {
-      const serviceInstances = ServiceProvider.serviceMap.get(type);
-
-      if (serviceInstances?.has(instanceName)) {
-        serviceInstances.delete(instanceName);
-      }
-    }
-  }
-
-  static removeService<T extends ServiceType>(type: T): void {
-    if (ServiceProvider.serviceMap.has(type)) {
-      ServiceProvider.serviceMap.delete(type);
-    }
-  }
-
-  static clearAllServices(): void {
-    ServiceProvider.serviceMap.clear();
   }
 }
