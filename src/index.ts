@@ -6,3 +6,4 @@
  */
 
 export { ServiceProvider } from './services';
+export { ILogger } from './types';
