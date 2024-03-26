@@ -1,6 +1,6 @@
 {
   "name": "@salesforce/vscode-service-provider",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Library that provides access to Salesforce VSCode Service Provider",
   "main": "index.js",
   "author": "Peter Hale <peter.hale@salesforce.com>",
