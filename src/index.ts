@@ -6,4 +6,4 @@
  */
 
 export { ServiceProvider } from './services';
-export { ILogger } from './types';
+export * from './types';
