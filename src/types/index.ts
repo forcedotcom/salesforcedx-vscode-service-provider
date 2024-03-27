@@ -75,9 +75,8 @@ interface ServiceParamsMap {
 }
 
 // Define a type that represents the parameter types for a given service type
-export type ServiceParams<T extends ServiceType> = T extends ServiceType.Logger
-  ? ServiceParamsMap[ServiceType.Logger]
-  : never;
+export type ServiceParams<T extends ServiceType> =
+  T extends keyof typeof ServiceType ? ServiceParamsMap[T] : never;
 
 // Define a type that represents the return type for a given service type
 export type ServiceReturnType<T extends ServiceType> =

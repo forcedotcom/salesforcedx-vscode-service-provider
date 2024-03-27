@@ -1,11 +1,11 @@
 # Publishing
 
-This is a guide for publishing the @salesforce/apex-node library to npm. Most contributors don't need to worry about publishing. Publishing can only be done by the Salesforce tooling team. Please contact us if there are changes that you'd like to publish.
+This is a guide for publishing the @salesforce/vscode-service-provider library to npm. Most contributors don't need to worry about publishing. Publishing can only be done by the Salesforce tooling team. Please contact us if there are changes that you'd like to publish.
 
 ## Prerequisites
 
 1. Every merge to 'main' automatically gets published with a minor version upgrade. The release process detailed here applies only for the case where a major version or a patch version upgrade is required.
-1. Publisher has a valid CircleCI token for the forcedotcom organization. More info on CircleCI's doc [Create a Personal API token](https://circleci.com/docs/2.0/managing-api-tokens/#creating-a-personal-api-token).
+1. Publisher has a valid GHA token for the forcedotcom organization.
 1. Publisher is a part of the GitHub team 'PDT'.
 
 ## Verify Work Items

@@ -5,6 +5,11 @@
   "main": "lib/src/index.js",
   "author": "Peter Hale <peter.hale@salesforce.com>",
   "license": "BSD-3-Clause",
+  "homepage": "https://github.com/forcedotcom/salesforcedx-vscode-service-provider",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/forcedotcom/salesforcedx-vscode-service-provider"
+  },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.1.0",
     "@salesforce/dev-config": "^4.1.0",
