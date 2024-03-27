@@ -1,3 +1,12 @@
+## [1.0.4](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.0.3...1.0.4) (2024-03-27)
+
+
+### Bug Fixes
+
+* add developing docs and fix one type ([b86e4b6](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/b86e4b6ed3122abb604e31fd952c27d0f6411385))
+
+
+
 ## [1.0.3](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.0.2...1.0.3) (2024-03-27)
 
 
