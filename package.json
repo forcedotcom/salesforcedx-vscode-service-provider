@@ -35,7 +35,7 @@
     "source-map-support": "^0.5.16",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.7.0",
-    "typescript": "^5.2.2",
+    "typescript": "^5.4.4",
     "vscode": "^1.1.37",
     "vscode-test": "^1.6.1"
   },
