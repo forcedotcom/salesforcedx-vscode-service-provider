@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.2.2",
-    "@salesforce/dev-config": "^4.1.0",
+    "@salesforce/dev-config": "^4.2.0",
     "@types/istanbul-lib-coverage": "^2.0.6",
     "@types/istanbul-lib-report": "^3.0.3",
     "@types/jest": "^29.5.12",
