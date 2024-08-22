@@ -17,6 +17,7 @@
     "@types/istanbul-lib-report": "^3.0.3",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.15.0",
+    "@types/vscode": "^1.86.0",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "commitlint": "^19.4.0",
@@ -36,7 +37,6 @@
     "ts-jest": "^29.2.4",
     "ts-node": "^10.7.0",
     "typescript": "^5.5.4",
-    "vscode": "^1.1.37",
     "vscode-test": "^1.6.1"
   },
   "files": [

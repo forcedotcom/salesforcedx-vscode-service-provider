@@ -55,6 +55,37 @@ export class ServiceProvider {
   }
 
   /**
+   * Sets a service instance of the specified type and instance name.
+   * If a service instance with the same type and instance name already exists, an error is thrown.
+   * This function should be used by provider to establish a service with a given name without having
+   * to go through the getService path. An example of this would be a logging service that needs to
+   * configure the logger before consumers request an instance of the service
+   *
+   * @param type - The type of the service.
+   * @param instanceName - The name of the service instance.
+   * @param serviceInstance - The instance of the service to be set.
+   * @throws {Error} If a service instance with the same type and instance name already exists.
+   */
+  static setService<T extends ServiceType>(
+    type: T,
+    instanceName: string,
+    serviceInstance: ServiceReturnType<T>
+  ): void {
+    if (ServiceProvider.has(type, instanceName)) {
+      const serviceTypeName = ServiceType[type];
+      throw new Error(
+        `Service instance ${instanceName} of type ${serviceTypeName} already exists`
+      );
+    }
+
+    if (!ServiceProvider.serviceMap.has(type)) {
+      ServiceProvider.serviceMap.set(type, new Map());
+    }
+
+    ServiceProvider.serviceMap.get(type)?.set(instanceName, serviceInstance);
+  }
+
+  /**
    * Checks if a service of the specified type exists.
    * @param type - The type of the service.
    * @returns True if the service exists, false otherwise.
@@ -142,6 +173,12 @@ export class ServiceProvider {
         serviceInstance = await vscode.commands.executeCommand<
           ServiceReturnType<T>
         >('sf.vscode.core.logger.get.instance', instanceName, ...rest);
+        break;
+      case ServiceType.Telemetry:
+        // Call VSCode command to materialize service A
+        serviceInstance = await vscode.commands.executeCommand<
+          ServiceReturnType<T>
+        >('sf.vscode.core.get.telemetry', instanceName, ...rest);
         break;
       default:
         throw new Error(`Unsupported service type: ${type}`);

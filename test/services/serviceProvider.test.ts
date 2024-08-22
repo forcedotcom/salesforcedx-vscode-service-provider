@@ -4,15 +4,98 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { ServiceProvider } from '../../src/services';
 import * as vscode from 'vscode';
-import { ServiceType } from '../../src/types';
+import {
+  ServiceType,
+  ServiceProvider,
+  TelemetryServiceInterface,
+  TelemetryReporter,
+  ActivationInfo,
+  Properties,
+  Measurements,
+  TelemetryData
+} from '../../src';
+import { ExtensionContext, ExtensionMode } from 'vscode';
 
 jest.mock('vscode-test', () => ({
   commands: {
     executeCommand: jest.fn()
   }
 }));
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
+class TelemetryService implements TelemetryServiceInterface {
+  checkCliTelemetry(): Promise<boolean> {
+    return Promise.resolve(false);
+  }
+
+  dispose(): void {}
+
+  getEndHRTime(hrstart: [number, number]): number {
+    return 0;
+  }
+
+  getReporters(): TelemetryReporter[] {
+    return [];
+  }
+
+  getTelemetryReporterName(): string {
+    return '';
+  }
+
+  hrTimeToMilliseconds(hrtime: [number, number]): number {
+    return 0;
+  }
+
+  initializeService(extensionContext: ExtensionContext): Promise<void> {
+    return Promise.resolve(undefined);
+  }
+
+  initializeServiceWithAttributes(
+    name: string,
+    apiKey?: string,
+    version?: string,
+    extensionMode?: ExtensionMode
+  ): Promise<void> {
+    return Promise.resolve(undefined);
+  }
+
+  isTelemetryEnabled(): Promise<boolean> {
+    return Promise.resolve(false);
+  }
+
+  isTelemetryExtensionConfigurationEnabled(): boolean {
+    return false;
+  }
+
+  sendActivationEventInfo(activationInfo: ActivationInfo): void {}
+
+  sendCommandEvent(
+    commandName?: string,
+    hrstart?: [number, number],
+    properties?: Properties,
+    measurements?: Measurements
+  ): void {}
+
+  sendEventData(
+    eventName: string,
+    properties?: { [p: string]: string },
+    measures?: { [p: string]: number }
+  ): void {}
+
+  sendException(name: string, message: string): void {}
+
+  sendExtensionActivationEvent(
+    hrstart: [number, number],
+    markEndTime?: number,
+    telemetryData?: TelemetryData
+  ): void {}
+
+  sendExtensionDeactivationEvent(): void {}
+
+  setCliTelemetryEnabled(isEnabled: boolean): void {}
+}
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 describe('ServiceProvider', () => {
   beforeEach(() => {
@@ -26,7 +109,7 @@ describe('ServiceProvider', () => {
     );
 
     const service = await ServiceProvider.getService(
-      ServiceType.Logger,
+      ServiceType.Telemetry,
       'mockService'
     );
     expect(service).toBe('mockService');
@@ -36,23 +119,23 @@ describe('ServiceProvider', () => {
     (vscode.commands.executeCommand as jest.Mock).mockResolvedValue(
       'mockService'
     );
-    await ServiceProvider.getService(ServiceType.Logger, 'mockService');
-    const hasService = ServiceProvider.hasService(ServiceType.Logger);
+    await ServiceProvider.getService(ServiceType.Telemetry, 'mockService');
+    const hasService = ServiceProvider.hasService(ServiceType.Telemetry);
     expect(hasService).toBe(true);
   });
 
   it('should check if a service instance exists', async () => {
-    await ServiceProvider.getService(ServiceType.Logger, 'instance1');
-    const hasInstance = ServiceProvider.has(ServiceType.Logger, 'instance1');
+    await ServiceProvider.getService(ServiceType.Telemetry, 'instance1');
+    const hasInstance = ServiceProvider.has(ServiceType.Telemetry, 'instance1');
     expect(hasInstance).toBe(true);
   });
   it('should remove a service instance', async () => {
     (vscode.commands.executeCommand as jest.Mock).mockResolvedValue(
       'mockService'
     );
-    await ServiceProvider.getService(ServiceType.Logger, 'instance1');
-    ServiceProvider.remove(ServiceType.Logger, 'instance1');
-    const hasInstance = ServiceProvider.has(ServiceType.Logger, 'instance1');
+    await ServiceProvider.getService(ServiceType.Telemetry, 'instance1');
+    ServiceProvider.remove(ServiceType.Telemetry, 'instance1');
+    const hasInstance = ServiceProvider.has(ServiceType.Telemetry, 'instance1');
     expect(hasInstance).toBe(false);
   });
 
@@ -60,9 +143,9 @@ describe('ServiceProvider', () => {
     (vscode.commands.executeCommand as jest.Mock).mockResolvedValue(
       'mockService'
     );
-    await ServiceProvider.getService(ServiceType.Logger, 'instance1');
-    ServiceProvider.removeService(ServiceType.Logger);
-    const hasService = ServiceProvider.hasService(ServiceType.Logger);
+    await ServiceProvider.getService(ServiceType.Telemetry, 'instance1');
+    ServiceProvider.removeService(ServiceType.Telemetry);
+    const hasService = ServiceProvider.hasService(ServiceType.Telemetry);
     expect(hasService).toBe(false);
   });
 
@@ -70,10 +153,38 @@ describe('ServiceProvider', () => {
     (vscode.commands.executeCommand as jest.Mock).mockResolvedValue(
       'mockService'
     );
-    await ServiceProvider.getService(ServiceType.Logger, 'instance1');
-    await ServiceProvider.getService(ServiceType.Logger, 'instance2');
+    await ServiceProvider.getService(ServiceType.Telemetry, 'instance1');
+    await ServiceProvider.getService(ServiceType.Telemetry, 'instance2');
     ServiceProvider.clearAllServices();
-    const hasService = ServiceProvider.hasService(ServiceType.Logger);
+    const hasService = ServiceProvider.hasService(ServiceType.Telemetry);
     expect(hasService).toBe(false);
+  });
+  it('should set a new service instance successfully', () => {
+    const telemetryServiceInstance = new TelemetryService(); // create a real instance of Logger
+    ServiceProvider.setService(
+      ServiceType.Telemetry,
+      'instance1',
+      telemetryServiceInstance
+    );
+    const hasInstance = ServiceProvider.has(ServiceType.Telemetry, 'instance1');
+    expect(hasInstance).toBe(true);
+  });
+
+  it('should throw an error when trying to set a service instance that already exists', () => {
+    const loggerInstance = new TelemetryService(); // create a real instance of Logger
+    ServiceProvider.setService(
+      ServiceType.Telemetry,
+      'instance1',
+      loggerInstance
+    );
+    expect(() => {
+      ServiceProvider.setService(
+        ServiceType.Telemetry,
+        'instance1',
+        loggerInstance
+      );
+    }).toThrowError(
+      new Error('Service instance instance1 of type Telemetry already exists')
+    );
   });
 });
