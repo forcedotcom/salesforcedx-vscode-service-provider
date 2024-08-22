@@ -175,13 +175,13 @@ describe('ServiceProvider', () => {
     ServiceProvider.setService(
       ServiceType.Telemetry,
       'instance1',
-      loggerInstance
+      telemetryServiceInstance
     );
     expect(() => {
       ServiceProvider.setService(
         ServiceType.Telemetry,
         'instance1',
-        loggerInstance
+        telemetryServiceInstance
       );
     }).toThrowError(
       new Error('Service instance instance1 of type Telemetry already exists')
