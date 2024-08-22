@@ -160,7 +160,7 @@ describe('ServiceProvider', () => {
     expect(hasService).toBe(false);
   });
   it('should set a new service instance successfully', () => {
-    const telemetryServiceInstance = new TelemetryService(); // create a real instance of Logger
+    const telemetryServiceInstance = new TelemetryService(); // create a real instance of TelemetryService
     ServiceProvider.setService(
       ServiceType.Telemetry,
       'instance1',
@@ -171,7 +171,7 @@ describe('ServiceProvider', () => {
   });
 
   it('should throw an error when trying to set a service instance that already exists', () => {
-    const loggerInstance = new TelemetryService(); // create a real instance of Logger
+    const telemetryServiceInstance = new TelemetryService(); // create a real instance of TelemetryService
     ServiceProvider.setService(
       ServiceType.Telemetry,
       'instance1',
