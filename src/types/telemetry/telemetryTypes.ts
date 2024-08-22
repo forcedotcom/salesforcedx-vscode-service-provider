@@ -69,7 +69,7 @@ export interface TelemetryServiceInterface {
    */
   initializeService(extensionContext: ExtensionContext): Promise<void>;
   /**
-   * Initialize Telemetry Service with name, foo, version, and extensionMode.
+   * Initialize Telemetry Service with name, apiKey, version, and extensionMode.
    * @param name extension name
    * @param apiKey
    * @param version extension version
