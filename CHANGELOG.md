@@ -1,3 +1,26 @@
+# [1.1.0](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.0.5...1.1.0) (2024-08-23)
+
+
+### Bug Fixes
+
+* change loggerInstance to telemetryServiceInstance to resolve compilation errors ([bb200b7](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/bb200b7635e486946a90b29f43b3ccfbf8d2b228))
+
+
+### Features
+
+* add telemetry service ([9ce5d4d](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/9ce5d4d633c3ce12e2138f11160da5b1dacae7ac))
+
+
+
+## [1.0.5](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.0.4...1.0.5) (2024-06-16)
+
+
+### Bug Fixes
+
+* **deps:** bump braces from 3.0.2 to 3.0.3 ([e0b3dc8](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/e0b3dc83deb29d9c27bb177e5d0784d8f5e2ecb5))
+
+
+
 ## [1.0.4](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.0.3...1.0.4) (2024-03-27)
 
 
