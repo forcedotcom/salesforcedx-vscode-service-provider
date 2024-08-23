@@ -13,7 +13,8 @@ import {
   ActivationInfo,
   Properties,
   Measurements,
-  TelemetryData
+  TelemetryData,
+  SFDX_CORE_EXTENSION_NAME
 } from '../../src';
 import { ExtensionContext, ExtensionMode } from 'vscode';
 
@@ -115,6 +116,20 @@ describe('ServiceProvider', () => {
     expect(service).toBe('mockService');
   });
 
+  it('should get a service name that is a default', async () => {
+    (vscode.commands.executeCommand as jest.Mock).mockResolvedValue(
+      'mockService'
+    );
+
+    const service = await ServiceProvider.getService(ServiceType.Telemetry);
+    expect(service).toBe('mockService');
+    const hasService = ServiceProvider.has(
+      ServiceType.Telemetry,
+      SFDX_CORE_EXTENSION_NAME
+    );
+    expect(hasService).toBe(true);
+  });
+
   it('should check if a service type exists', async () => {
     (vscode.commands.executeCommand as jest.Mock).mockResolvedValue(
       'mockService'
@@ -129,6 +144,7 @@ describe('ServiceProvider', () => {
     const hasInstance = ServiceProvider.has(ServiceType.Telemetry, 'instance1');
     expect(hasInstance).toBe(true);
   });
+
   it('should remove a service instance', async () => {
     (vscode.commands.executeCommand as jest.Mock).mockResolvedValue(
       'mockService'
@@ -159,6 +175,7 @@ describe('ServiceProvider', () => {
     const hasService = ServiceProvider.hasService(ServiceType.Telemetry);
     expect(hasService).toBe(false);
   });
+
   it('should set a new service instance successfully', () => {
     const telemetryServiceInstance = new TelemetryService(); // create a real instance of TelemetryService
     ServiceProvider.setService(

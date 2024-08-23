@@ -4,7 +4,13 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { ServiceParams, ServiceReturnType, ServiceType } from '../types';
+import {
+  ServiceInstanceValidators,
+  ServiceParams,
+  ServiceReturnType,
+  ServiceType,
+  ServiceValidators
+} from '../types';
 import * as vscode from 'vscode';
 
 /**
@@ -28,17 +34,22 @@ export class ServiceProvider {
    */
   static async getService<T extends ServiceType>(
     type: T,
-    instanceName: string,
+    instanceName?: string,
     ...rest: ServiceParams<T>[] // This does not make sense, so keep an eye on it
   ): Promise<ServiceReturnType<T>> {
     let serviceInstance: ServiceReturnType<T> | undefined;
 
+    // Validate and correct instance name
+    const instanceValidator = ServiceInstanceValidators[type];
+    const correctedInstanceName =
+      instanceValidator.validateAndCorrect(instanceName);
+
     if (ServiceProvider.serviceMap.has(type)) {
       const serviceInstances = ServiceProvider.serviceMap.get(type);
 
-      if (serviceInstances?.has(instanceName)) {
+      if (serviceInstances?.has(correctedInstanceName)) {
         serviceInstance = serviceInstances.get(
-          instanceName
+          correctedInstanceName
         ) as ServiceReturnType<T>;
       }
     }
@@ -46,7 +57,7 @@ export class ServiceProvider {
     if (!serviceInstance) {
       serviceInstance = await ServiceProvider.materializeService<T>(
         type,
-        instanceName,
+        correctedInstanceName,
         ...rest
       );
     }
@@ -165,6 +176,10 @@ export class ServiceProvider {
     instanceName: string,
     ...rest: ServiceParams<T>[]
   ): Promise<ServiceReturnType<T>> {
+    const paramValidator = ServiceValidators[type];
+    const correctedParams = paramValidator.validateAndCorrect(
+      rest as ServiceParams<T>
+    );
     let serviceInstance: ServiceReturnType<T> | undefined;
 
     switch (type) {
@@ -172,13 +187,17 @@ export class ServiceProvider {
         // Call VSCode command to materialize service A
         serviceInstance = await vscode.commands.executeCommand<
           ServiceReturnType<T>
-        >('sf.vscode.core.logger.get.instance', instanceName, ...rest);
+        >(
+          'sf.vscode.core.logger.get.instance',
+          instanceName,
+          ...correctedParams
+        );
         break;
       case ServiceType.Telemetry:
         // Call VSCode command to materialize service A
         serviceInstance = await vscode.commands.executeCommand<
           ServiceReturnType<T>
-        >('sf.vscode.core.get.telemetry', instanceName, ...rest);
+        >('sf.vscode.core.get.telemetry', instanceName, ...correctedParams);
         break;
       default:
         throw new Error(`Unsupported service type: ${type}`);
