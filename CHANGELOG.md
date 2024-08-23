@@ -1,3 +1,12 @@
+## [1.1.1](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.1.0...1.1.1) (2024-08-23)
+
+
+### Bug Fixes
+
+* needed adjustments due to discovery ([4e7bba6](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/4e7bba64a19d9278dad1a96999e51ccf96fa2fa7))
+
+
+
 # [1.1.0](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.0.5...1.1.0) (2024-08-23)
 
 
