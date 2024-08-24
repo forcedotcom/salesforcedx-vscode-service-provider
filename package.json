@@ -34,7 +34,7 @@
     "prettier": "^3.3.3",
     "shx": "^0.3.4",
     "source-map-support": "^0.5.16",
-    "ts-jest": "^29.2.4",
+    "ts-jest": "^29.2.5",
     "ts-node": "^10.7.0",
     "typescript": "^5.5.4",
     "vscode-test": "^1.6.1"
