@@ -1,3 +1,12 @@
+## [1.1.2](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.1.1...1.1.2) (2024-08-24)
+
+
+### Bug Fixes
+
+* **deps:** bump micromatch from 4.0.7 to 4.0.8 ([303b2ae](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/303b2ae79e4c76cf50edf4b5bce164a5b9be8f57))
+
+
+
 ## [1.1.1](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.1.0...1.1.1) (2024-08-23)
 
 
