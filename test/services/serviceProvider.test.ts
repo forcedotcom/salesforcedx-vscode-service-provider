@@ -14,7 +14,9 @@ import {
   Properties,
   Measurements,
   TelemetryData,
-  SFDX_CORE_EXTENSION_NAME
+  SFDX_CORE_EXTENSION_NAME,
+  telemetryCommand,
+  loggerCommand
 } from '../../src';
 import { ExtensionContext, ExtensionMode } from 'vscode';
 
@@ -102,6 +104,10 @@ describe('ServiceProvider', () => {
   beforeEach(() => {
     ServiceProvider.clearAllServices();
     (vscode.commands.executeCommand as jest.Mock).mockClear();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    jest.spyOn(ServiceProvider as any, 'getCommands').mockImplementation(() => {
+      return Promise.resolve([telemetryCommand, loggerCommand]);
+    });
   });
 
   it('should get a service', async () => {
@@ -200,8 +206,50 @@ describe('ServiceProvider', () => {
         'instance1',
         telemetryServiceInstance
       );
-    }).toThrowError(
+    }).toThrow(
       new Error('Service instance instance1 of type Telemetry already exists')
     );
+  });
+  describe('getCommandString', () => {
+    it('should return the correct command string for Logger service type', () => {
+      const command = ServiceProvider['getCommandString'](ServiceType.Logger);
+      expect(command).toBe(loggerCommand);
+    });
+
+    it('should return the correct command string for Telemetry service type', () => {
+      const command = ServiceProvider['getCommandString'](
+        ServiceType.Telemetry
+      );
+      expect(command).toBe(telemetryCommand);
+    });
+
+    it('should throw an error for unsupported service type', () => {
+      expect(() => {
+        // @ts-ignore
+        ServiceProvider['getCommandString'](999 as ServiceType);
+      }).toThrow('Unsupported service type: 999');
+    });
+  });
+
+  describe('checkCommandAvailability', () => {
+    it('should not throw an error if the command is available', async () => {
+      await expect(
+        ServiceProvider['checkCommandAvailability'](loggerCommand)
+      ).resolves.not.toThrow();
+    });
+
+    it('should throw an error if the command is not available', async () => {
+      jest
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .spyOn(ServiceProvider as any, 'getCommands')
+        .mockImplementation(() => {
+          return Promise.resolve([telemetryCommand]);
+        });
+      await expect(
+        ServiceProvider['checkCommandAvailability'](loggerCommand)
+      ).rejects.toThrow(
+        `Command ${loggerCommand} cannot be found in the current vscode session.`
+      );
+    });
   });
 });
