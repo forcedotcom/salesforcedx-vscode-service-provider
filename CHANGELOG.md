@@ -1,3 +1,12 @@
+# [1.2.0](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.1.2...1.2.0) (2024-09-06)
+
+
+### Features
+
+* check for command availability ([c41e17a](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/c41e17a3d9c407e0c9ee1b0440049f12732b60e5))
+
+
+
 ## [1.1.2](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.1.1...1.1.2) (2024-08-24)
 
 
