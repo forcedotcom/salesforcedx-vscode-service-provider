@@ -7,3 +7,6 @@
 
 export { ServiceProvider } from './services';
 export * from './types';
+
+export const telemetryCommand = 'sf.vscode.core.get.telemetry';
+export const loggerCommand = 'sf.vscode.core.logger.get.instance';

@@ -12,6 +12,7 @@ import {
   ServiceValidators
 } from '../types';
 import * as vscode from 'vscode';
+import { loggerCommand, telemetryCommand } from '../index';
 
 /**
  * The ServiceProvider class is a utility class that provides services of different types.
@@ -35,7 +36,7 @@ export class ServiceProvider {
   static async getService<T extends ServiceType>(
     type: T,
     instanceName?: string,
-    ...rest: ServiceParams<T>[] // This does not make sense, so keep an eye on it
+    ...rest: ServiceParams<T>[]
   ): Promise<ServiceReturnType<T>> {
     let serviceInstance: ServiceReturnType<T> | undefined;
 
@@ -46,7 +47,6 @@ export class ServiceProvider {
 
     if (ServiceProvider.serviceMap.has(type)) {
       const serviceInstances = ServiceProvider.serviceMap.get(type);
-
       if (serviceInstances?.has(correctedInstanceName)) {
         serviceInstance = serviceInstances.get(
           correctedInstanceName
@@ -55,6 +55,8 @@ export class ServiceProvider {
     }
 
     if (!serviceInstance) {
+      const command = ServiceProvider.getCommandString(type);
+      await ServiceProvider.checkCommandAvailability(command);
       serviceInstance = await ServiceProvider.materializeService<T>(
         type,
         correctedInstanceName,
@@ -162,6 +164,43 @@ export class ServiceProvider {
   }
 
   /**
+   * Checks if a command is available in the list of VSCode commands.
+   * @param command - The command to check.
+   * @throws {Error} If the command is not available.
+   */
+  private static async checkCommandAvailability(
+    command: string
+  ): Promise<void> {
+    const availableCommands = await this.getCommands();
+    if (!availableCommands.includes(command)) {
+      throw new Error(
+        `Command ${command} cannot be found in the current vscode session.`
+      );
+    }
+  }
+
+  private static getCommands(): Promise<string[]> {
+    return Promise.resolve(vscode.commands.getCommands());
+  }
+
+  /**
+   * Returns the command string based on the service type.
+   * @param type - The type of the service.
+   * @returns The command string.
+   * @throws {Error} If the service type is unsupported.
+   */
+  private static getCommandString(type: ServiceType): string {
+    switch (type) {
+      case ServiceType.Logger:
+        return loggerCommand;
+      case ServiceType.Telemetry:
+        return telemetryCommand;
+      default:
+        throw new Error(`Unsupported service type: ${type}`);
+    }
+  }
+
+  /**
    * Materializes a service instance of the specified type and instance name.
    * If the service instance does not exist, it will be created.
    * @private
@@ -180,28 +219,11 @@ export class ServiceProvider {
     const correctedParams = paramValidator.validateAndCorrect(
       rest as ServiceParams<T>
     );
-    let serviceInstance: ServiceReturnType<T> | undefined;
+    const command = ServiceProvider.getCommandString(type);
 
-    switch (type) {
-      case ServiceType.Logger:
-        // Call VSCode command to materialize service A
-        serviceInstance = await vscode.commands.executeCommand<
-          ServiceReturnType<T>
-        >(
-          'sf.vscode.core.logger.get.instance',
-          instanceName,
-          ...correctedParams
-        );
-        break;
-      case ServiceType.Telemetry:
-        // Call VSCode command to materialize service A
-        serviceInstance = await vscode.commands.executeCommand<
-          ServiceReturnType<T>
-        >('sf.vscode.core.get.telemetry', instanceName, ...correctedParams);
-        break;
-      default:
-        throw new Error(`Unsupported service type: ${type}`);
-    }
+    const serviceInstance = await vscode.commands.executeCommand<
+      ServiceReturnType<T>
+    >(command, instanceName, ...correctedParams);
 
     if (!serviceInstance) {
       throw new Error(
