@@ -15,7 +15,7 @@
     "@salesforce/dev-config": "^4.3.1",
     "@types/istanbul-lib-coverage": "^2.0.6",
     "@types/istanbul-lib-report": "^3.0.3",
-    "@types/jest": "^29.5.12",
+    "@types/jest": "^29.5.13",
     "@types/node": "^20.16.5",
     "@types/vscode": "^1.93.0",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
