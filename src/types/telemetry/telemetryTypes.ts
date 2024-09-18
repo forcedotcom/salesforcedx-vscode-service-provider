@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { ExtensionContext, ExtensionKind, ExtensionMode, Uri } from 'vscode';
+import { ExtensionContext, ExtensionKind, Uri } from 'vscode';
 
 /* eslint-disable header/header */
 /*---------------------------------------------------------
@@ -68,19 +68,6 @@ export interface TelemetryServiceInterface {
    * @param extensionContext extension context
    */
   initializeService(extensionContext: ExtensionContext): Promise<void>;
-  /**
-   * Initialize Telemetry Service with name, apiKey, version, and extensionMode.
-   * @param name extension name
-   * @param apiKey
-   * @param version extension version
-   * @param extensionMode extension mode
-   */
-  initializeServiceWithAttributes(
-    name: string,
-    apiKey?: string,
-    version?: string,
-    extensionMode?: ExtensionMode
-  ): Promise<void>;
 
   /**
    * Helper to get the name for telemetryReporter
