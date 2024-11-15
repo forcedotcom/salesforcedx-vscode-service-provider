@@ -7,18 +7,28 @@
 
 import { LoggerInterface } from './logger/loggerTypes';
 import { TelemetryServiceInterface } from './telemetry/telemetryTypes';
+import { AiApiClient } from './aiApiClient/aiApiClientTypes';
 
 export const SFDX_CORE_EXTENSION_NAME = 'salesforcedx-vscode-core';
 
 export enum ServiceType {
   Logger = 'Logger',
-  Telemetry = 'Telemetry'
+  Telemetry = 'Telemetry',
+  AiApiClient = 'AiApiClient'
 }
 
 // Define a mapping from service types to their corresponding parameter types
 interface ServiceParamsMap {
   [ServiceType.Logger]: [string]; // Logger requires a string parameter
   [ServiceType.Telemetry]: [string | undefined];
+  [ServiceType.AiApiClient]: undefined;
+}
+
+// Define a mapping from service types to their corresponding return types
+interface ServiceReturnTypeMap {
+  [ServiceType.Telemetry]: TelemetryServiceInterface;
+  [ServiceType.Logger]: LoggerInterface;
+  [ServiceType.AiApiClient]: AiApiClient;
 }
 
 // Define a type that represents the parameter types for a given service type
@@ -27,11 +37,7 @@ export type ServiceParams<T extends ServiceType> =
 
 // Define a type that represents the return type for a given service type
 export type ServiceReturnType<T extends ServiceType> =
-  T extends ServiceType.Telemetry
-    ? TelemetryServiceInterface
-    : T extends ServiceType.Logger
-      ? LoggerInterface
-      : never;
+  T extends keyof ServiceReturnTypeMap ? ServiceReturnTypeMap[T] : never;
 
 // Define a ServiceValidator interface
 interface ServiceValidator<T extends ServiceType> {
@@ -55,8 +61,14 @@ export const ServiceValidators: {
     ): ServiceParams<ServiceType.Telemetry> {
       return params;
     }
+  },
+  [ServiceType.AiApiClient]: {
+    validateAndCorrect(
+      params: ServiceParams<ServiceType.AiApiClient>
+    ): ServiceParams<ServiceType.AiApiClient> {
+      return params;
+    }
   }
-  // Add more validators as needed
 };
 
 // Define a ServiceInstanceValidator interface
@@ -78,8 +90,14 @@ export const ServiceInstanceValidators: {
     validateAndCorrect(instanceName: string): string {
       return instanceName || SFDX_CORE_EXTENSION_NAME;
     }
+  },
+  [ServiceType.AiApiClient]: {
+    validateAndCorrect(): string {
+      return 'singletonAiApiClient';
+    }
   }
-  // Add more validators as needed
 };
+
 export * from './logger/loggerTypes';
 export * from './telemetry/telemetryTypes';
+export * from './aiApiClient/aiApiClientTypes';
