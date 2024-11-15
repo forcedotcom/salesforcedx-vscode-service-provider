@@ -7,7 +7,7 @@
 
 import { LoggerInterface } from './logger/loggerTypes';
 import { TelemetryServiceInterface } from './telemetry/telemetryTypes';
-import { AiApiClient } from './aiApiClient/aiApiClientTypes';
+import { AiApiClient } from './aiApiClient';
 
 export const SFDX_CORE_EXTENSION_NAME = 'salesforcedx-vscode-core';
 
@@ -100,4 +100,4 @@ export const ServiceInstanceValidators: {
 
 export * from './logger/loggerTypes';
 export * from './telemetry/telemetryTypes';
-export * from './aiApiClient/aiApiClientTypes';
+export * from './aiApiClient';
