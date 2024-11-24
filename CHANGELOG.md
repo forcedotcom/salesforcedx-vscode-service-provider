@@ -1,3 +1,21 @@
+## [1.2.2](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.2.1...1.2.2) (2024-11-24)
+
+
+### Bug Fixes
+
+* **deps:** bump cross-spawn from 7.0.3 to 7.0.6 ([ca3df7e](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/ca3df7e29e6998de0dedf2259e63e0e738cde032))
+
+
+
+## [1.2.1](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.2.0...1.2.1) (2024-09-18)
+
+
+### Bug Fixes
+
+* remove method initializeServiceWithAttributes ([503633f](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/503633fef6ff1ba749d2d6c00c264063e9ac1876))
+
+
+
 # [1.2.0](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.1.2...1.2.0) (2024-09-06)
 
 
