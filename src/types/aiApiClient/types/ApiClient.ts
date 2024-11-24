@@ -14,6 +14,8 @@ import { Completion } from '../utils/Completion/Completion';
 import { AiCompletion } from '../index';
 import { InlineCompletionRequestInputs } from '../Completions/InlineCompletions';
 import { CancellationToken } from 'vscode';
+import type { Stream } from 'openai/streaming';
+// import { ChatRequestBodyWithPrompt } from '../services';
 
 export type LLMRequestBody = {
   id: string;
@@ -81,4 +83,18 @@ export interface AiApiClient {
    * @returns A promise that resolves when the feedback is sent.
    */
   sendLLMFeedback?(telemetryData: LLMRequestBody): Promise<void>;
+
+  getChatStream(
+    body: ChatRequestBodyWithPrompt,
+    promptId: string
+  ): Promise<Stream<unknown>>;
+}
+
+interface ChatRequestBodyWithPrompt {
+  prompt: string;
+  stop_sequences?: string[] | string | null;
+  max_tokens: number;
+  parameters: {
+    command_source: CommandSource;
+  };
 }
