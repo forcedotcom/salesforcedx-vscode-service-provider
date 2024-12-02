@@ -10,5 +10,7 @@ export * from './types/TelemetryData';
 export * from './types/ApiClient';
 export * from './enums/commandSource';
 export * from './utils/Completion/Completion';
+export * from './utils/sendPromptToLLMUtils';
+export * from './utils/typeGuards';
 export * from './Completions/AiCompletion';
 export * from './Completions/InlineCompletions';
