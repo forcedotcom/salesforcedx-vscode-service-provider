@@ -52,7 +52,7 @@
     "package": "yarn pack",
     "prettier": "prettier ./**/*.{js,json,ts,md} --write",
     "format:check": "prettier ./**/*.{js,json,ts,md} --debug-check",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "config": {
     "commitizen": {

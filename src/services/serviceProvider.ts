@@ -12,7 +12,7 @@ import {
   ServiceValidators
 } from '../types';
 import * as vscode from 'vscode';
-import { loggerCommand, telemetryCommand } from '../index';
+import { llmServiceCommand, loggerCommand, telemetryCommand } from '../index';
 
 /**
  * The ServiceProvider class is a utility class that provides services of different types.
@@ -195,6 +195,8 @@ export class ServiceProvider {
         return loggerCommand;
       case ServiceType.Telemetry:
         return telemetryCommand;
+      case ServiceType.LLMService:
+        return llmServiceCommand;
       default:
         throw new Error(`Unsupported service type: ${type}`);
     }
