@@ -10,29 +10,6 @@
  */
 export interface LLMServiceInterface {
   /**
-   * Calls the LLM with the provided engineered prompt.
-   * @param engineeredPrompt - The prompt that has been engineered for the LLM.
-   * @returns A promise that resolves to the LLM's response as a string.
-   */
-  callLLM(engineeredPrompt: string): Promise<string>;
-
-  /**
-   * Calls the LLM with the provided engineered prompt and prompt ID.
-   * @param engineeredPrompt - The prompt that has been engineered for the LLM.
-   * @param promptId - The ID of the prompt.
-   * @returns A promise that resolves to the LLM's response as a string.
-   */
-  callLLM(engineeredPrompt: string, promptId: string): Promise<string>;
-
-  /**
-   * Calls the LLM with the provided engineered prompt and input token limit.
-   * @param engineeredPrompt - The prompt that has been engineered for the LLM.
-   * @param inputTokenLimit - The limit on the number of input tokens.
-   * @returns A promise that resolves to the LLM's response as a string.
-   */
-  callLLM(engineeredPrompt: string, inputTokenLimit: number): Promise<string>;
-
-  /**
    * Calls the LLM with the provided engineered prompt, prompt ID, and input token limit.
    * @param engineeredPrompt - The prompt that has been engineered for the LLM.
    * @param promptId - The ID of the prompt (optional).
