@@ -12,15 +12,26 @@ export interface LLMServiceInterface {
   /**
    * Calls the LLM with the provided engineered prompt, prompt ID, and input token limit.
    * @param engineeredPrompt - The prompt that has been engineered for the LLM.
-   * @param jsonSchema - The string of the guided json of the structure of the LLM response (optional)
    * @param promptId - The ID of the prompt (optional).
    * @param outputTokenLimit - The limit on the number of output tokens (optional).
+   * @param options - The object of other options in the request (optional)
    * @returns A promise that resolves to the LLM's response as a string.
    */
   callLLM(
     engineeredPrompt: string,
-    jsonSchema?: string,
     promptId?: string,
-    outputTokenLimit?: number
+    outputTokenLimit?: number,
+    options?: CallLLMOptions
   ): Promise<string>;
 }
+
+export type CallLLMOptions = {
+  // Values to be added to the parameters property on the request.
+  parameters?: {
+    guided_json?: string;
+  };
+  // Properties to be added to the body of the request.
+  properties?: {
+    stop_sequence?: string[];
+  };
+};
