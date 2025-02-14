@@ -28,10 +28,10 @@ export interface LLMServiceInterface {
 export type CallLLMOptions = {
   // Values to be added to the parameters property on the request.
   parameters?: {
-    guided_json?: string;
+    guided_json?: string; // TODO: define the type in detail
   };
   // Properties to be added to the body of the request.
   properties?: {
-    stop_sequence?: string[];
+    stop_sequence?: string[]; // TODO: define the type in detail
   };
 };
