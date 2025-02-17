@@ -7,7 +7,7 @@
 
 import { LoggerInterface } from './logger/loggerTypes';
 import { TelemetryServiceInterface } from './telemetry/telemetryTypes';
-import { LLMServiceInterface } from './llmService/LLMService';
+import { LLMServiceInterface } from './llmService';
 
 export const SFDX_CORE_EXTENSION_NAME = 'salesforcedx-vscode-core';
 
