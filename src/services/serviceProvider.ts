@@ -26,6 +26,19 @@ export class ServiceProvider {
   > = new Map();
 
   /**
+   * Checks if the service is available to be created and returned from the {@link getService} method.
+   * Specifically, this method checks if there even is a command associated with the specified
+   * @{link ServiceType} registered within VS Code.
+   * @param type - The type of the service.
+   * @returns The value true if the service is available and false otherwise.
+   */
+  static async isServiceAvailable<T extends ServiceType>(
+    type: T
+  ): Promise<boolean> {
+    return (await this.getCommands()).includes(this.getCommandString(type));
+  }
+
+  /**
    * Retrieves a service instance of the specified type and instance name.
    * If the service instance does not exist, it will be created.
    * @param type - The type of the service.
@@ -99,7 +112,7 @@ export class ServiceProvider {
   }
 
   /**
-   * Checks if a service of the specified type exists.
+   * Checks if a service of the specified type exists yet within the cache of the ServiceProvider.
    * @param type - The type of the service.
    * @returns True if the service exists, false otherwise.
    */
@@ -108,7 +121,7 @@ export class ServiceProvider {
   }
 
   /**
-   * Checks if a service instance of the specified type and instance name exists.
+   * Checks if a service instance of the specified type and instance name exists yet within the cache of the ServiceProvider.
    * @param type - The type of the service.
    * @param instanceName - The name of the service instance.
    * @returns True if the service instance exists, false otherwise.

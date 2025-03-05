@@ -110,6 +110,26 @@ describe('ServiceProvider', () => {
     });
   });
 
+  it('should correctly identify that a service is available if the associated command is registered', async () => {
+    const isAvailable = await ServiceProvider.isServiceAvailable(
+      ServiceType.Telemetry
+    );
+    expect(isAvailable).toBe(true);
+  });
+
+  it('should correctly identify that a service is not available if the associated command is not registered', async () => {
+    jest
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .spyOn(ServiceProvider as any, 'getCommands')
+      .mockImplementation(() => {
+        return Promise.resolve([loggerCommand]);
+      });
+    const isAvailable = await ServiceProvider.isServiceAvailable(
+      ServiceType.Telemetry
+    );
+    expect(isAvailable).toBe(false);
+  });
+
   it('should get a service', async () => {
     (vscode.commands.executeCommand as jest.Mock).mockResolvedValue(
       'mockService'
