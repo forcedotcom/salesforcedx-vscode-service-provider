@@ -1,3 +1,66 @@
+# [1.4.0](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.3.0-rc.6.6...1.4.0) (2025-03-05)
+
+
+### Features
+
+* force release ([c866a87](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/c866a87e4bb30451b0e430f735eb7d602e40e4e3))
+
+
+
+# [1.3.0-rc.6.6](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.3.0-rc.6.5...1.3.0-rc.6.6) (2025-03-05)
+
+
+### Features
+
+* add isServiceAvailable method ([#178](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/issues/178)) ([e1427e0](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/e1427e04800a89034b5628562f17153b671dba6f))
+
+
+
+# [1.3.0-rc.6.5](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.3.0-rc.6.4...1.3.0-rc.6.5) (2025-02-17)
+
+
+### Bug Fixes
+
+* simplify imports ([415ed17](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/415ed174da38312e842db646724c955aea791e04))
+
+
+
+# [1.3.0-rc.6.4](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.3.0-rc.6.3...1.3.0-rc.6.4) (2025-02-14)
+
+
+### Features
+
+* add json_schema as parameter to call LLM ([6a87668](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/6a87668bc3804f1e9284753c665a0a41e9cace79))
+
+
+
+# [1.3.0-rc.6.3](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.3.0-rc.6.2...1.3.0-rc.6.3) (2025-01-07)
+
+
+### Bug Fixes
+
+* add input token limit parameter to callLLM ([b44f3ff](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/b44f3ff95807bddf5cb175f2d2811a1c7624c63a))
+
+
+
+# [1.3.0-rc.6.2](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.3.0-rc.6.1...1.3.0-rc.6.2) (2024-12-20)
+
+
+### Bug Fixes
+
+* correct typo in llm service vscode command ([b6caa1e](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/b6caa1e9a876bb9d26f049eed86a3efcb4976c52))
+
+
+
+# [1.3.0-rc.6.1](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.2.2...1.3.0-rc.6.1) (2024-12-19)
+
+
+### Features
+
+* add llm service ([77bc2bc](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/77bc2bcee987c770c6533519c05be91435b03e55))
+
+
+
 ## [1.2.2](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.2.1...1.2.2) (2024-11-24)
 
 
