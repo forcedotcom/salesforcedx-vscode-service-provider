@@ -10,6 +10,9 @@
     "type": "git",
     "url": "https://github.com/forcedotcom/salesforcedx-vscode-service-provider"
   },
+  "dependencies": {
+    "semver": "^7.7.1"
+  },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.8.0",
     "@salesforce/dev-config": "^4.3.1",

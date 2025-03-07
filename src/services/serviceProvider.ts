@@ -9,10 +9,14 @@ import {
   ServiceParams,
   ServiceReturnType,
   ServiceType,
-  ServiceValidators
+  serviceTypeToProvider,
+  ServiceValidators,
+  ServiceWaitResult,
+  WaitOptions
 } from '../types';
 import * as vscode from 'vscode';
 import { llmServiceCommand, loggerCommand, telemetryCommand } from '../index';
+import { ExtensionManager } from '../extensions';
 
 /**
  * The ServiceProvider class is a utility class that provides services of different types.
@@ -36,6 +40,17 @@ export class ServiceProvider {
     type: T
   ): Promise<boolean> {
     return (await this.getCommands()).includes(this.getCommandString(type));
+  }
+
+  static async waitForProvider<T extends ServiceType>(
+    serviceType: T,
+    options?: WaitOptions
+  ): Promise<ServiceWaitResult> {
+    const waitResult = await ExtensionManager.waitForExtensionToBecomeActive(
+      serviceTypeToProvider[serviceType],
+      options
+    );
+    return waitResult;
   }
 
   /**
