@@ -5,4 +5,3 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 export { default as ExtensionManager } from './extensionManager';
-export { default as ExtensionInstaller } from './extensionInstaller';

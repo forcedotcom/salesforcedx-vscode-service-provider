@@ -11,6 +11,7 @@
     "url": "https://github.com/forcedotcom/salesforcedx-vscode-service-provider"
   },
   "dependencies": {
+    "async-lock": "^1.4.1",
     "semver": "^7.7.1"
   },
   "devDependencies": {
@@ -46,7 +47,7 @@
     "lib/src"
   ],
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest --coverage --runInBand",
     "build": "shx rm -rf lib && tsc -b",
     "commit-init": "commitizen init cz-conventional-changelog --save-dev --save-exact --force",
     "commit": "git-cz",

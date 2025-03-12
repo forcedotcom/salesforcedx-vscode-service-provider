@@ -134,23 +134,45 @@ export const ServiceInstanceValidators: {
 };
 
 export interface WaitOptions {
-  timeout?: number;
-  waitTimeUntilForceActivate?: number;
+  timeout: number;
   waitInterval?: number;
-  forceActivate?: boolean;
-  install?: boolean;
+  forceActivate?: boolean; // TODO: forceActivate and throwOnTimeout are mutually exclusive, consider combining them into a single option
   throwOnTimeout?: boolean;
 }
 
-export type ExtensionState =
-  | 'NotInstalled'
-  | 'InstalledInactive'
-  | 'InstalledActive';
+export const isWaitOptions = (obj: unknown): obj is WaitOptions => {
+  return obj && typeof obj === 'object' && 'timeout' in obj;
+};
+
+export const normalizeWaitOptions = (
+  options: Partial<WaitOptions>
+): WaitOptions => {
+  const { timeout, waitInterval, forceActivate, throwOnTimeout } = options;
+
+  return {
+    timeout,
+    waitInterval,
+    forceActivate,
+    throwOnTimeout: throwOnTimeout ?? true
+  };
+};
+
+export type ExtensionState = 'Unavailable' | 'Inactive' | 'Active';
 
 export type ServiceWaitResult = {
   success: boolean;
   message: string;
   state: ExtensionState;
+};
+
+export type ServiceGetResult<T extends ServiceType> = ServiceWaitResult & {
+  service: ServiceReturnType<T> | undefined;
+};
+
+export const isServiceGetResult = (
+  obj: unknown
+): obj is ServiceGetResult<never> => {
+  return obj && typeof obj === 'object' && 'success' in obj;
 };
 
 export * from './logger/loggerTypes';

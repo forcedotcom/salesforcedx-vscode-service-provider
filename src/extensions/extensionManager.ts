@@ -7,12 +7,15 @@
 import * as vscode from 'vscode';
 import {
   ExtensionState,
+  normalizeWaitOptions,
   ServiceProviders,
   serviceTypeToProvider,
   ServiceWaitResult,
   WaitOptions
 } from '../types';
-import ExtensionInstaller from './extensionInstaller';
+// Below import has to be required for bundling
+// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
+const AsyncLock = require('async-lock');
 
 export default class ExtensionManager {
   private static instance: ExtensionManager;
@@ -20,31 +23,34 @@ export default class ExtensionManager {
     ServiceProviders,
     vscode.Extension<unknown> | undefined
   >;
+  private lock = new AsyncLock();
 
   private constructor() {
     this.extensionStates = new Map<
       ServiceProviders,
       vscode.Extension<unknown> | undefined
     >();
-    this.initializeExtensionStates();
-    vscode.extensions.onDidChange(this.handleExtensionChange.bind(this));
+    this.setupExtensionChangeHandler();
   }
 
-  public static getInstance(): ExtensionManager {
+  public static async getInstance(): Promise<ExtensionManager> {
     if (!ExtensionManager.instance) {
       ExtensionManager.instance = new ExtensionManager();
+      await ExtensionManager.instance.initializeExtensionStates();
     }
     return ExtensionManager.instance;
   }
 
-  private initializeExtensionStates() {
-    this.extensionStates.clear();
-    const processedProviders = new Set(Object.values(serviceTypeToProvider));
+  protected async initializeExtensionStates(): Promise<void> {
+    await this.lock.acquire(this.extensionStates, () => {
+      this.extensionStates.clear();
+      const processedProviders = new Set(Object.values(serviceTypeToProvider));
 
-    processedProviders.forEach((provider) => {
-      const extension = vscode.extensions.getExtension(provider);
-      this.extensionStates.set(provider, extension);
-      processedProviders.add(provider);
+      processedProviders.forEach((provider) => {
+        const extension = vscode.extensions.getExtension(provider);
+        this.extensionStates.set(provider, extension);
+        processedProviders.add(provider);
+      });
     });
   }
 
@@ -75,24 +81,23 @@ export default class ExtensionManager {
 
   public static async waitForExtensionToBecomeActive(
     provider: ServiceProviders,
-    options: WaitOptions = {}
+    options: WaitOptions = {
+      timeout: 60_000,
+      waitInterval: 100,
+      throwOnTimeout: true
+    }
   ): Promise<ServiceWaitResult> {
-    const {
-      timeout = 30_000,
-      waitInterval = 100,
-      waitTimeUntilForceActivate = 30_000,
-      forceActivate = false,
-      install = false,
-      throwOnTimeout = true
-    } = options;
+    const { timeout, waitInterval, forceActivate, throwOnTimeout } =
+      normalizeWaitOptions(options);
 
-    const extensionManager = ExtensionManager.getInstance();
-    let state: ExtensionState = 'NotInstalled';
-    const start = Date.now();
+    this.validateWaitOptions(timeout, waitInterval);
 
+    const extensionManager = await ExtensionManager.getInstance();
+    let state: ExtensionState = 'Unavailable';
+    let interval: NodeJS.Timeout;
     const checkExtensionState = (): Promise<ServiceWaitResult> => {
       return new Promise((resolve) => {
-        const interval = setInterval(async () => {
+        interval = setInterval(async () => {
           const extension = extensionManager.getExtensionState(provider);
           if (extension) {
             if (extension.isActive) {
@@ -100,44 +105,74 @@ export default class ExtensionManager {
               resolve({
                 success: true,
                 message: `Extension ${provider} is active.`,
-                state: 'InstalledActive'
+                state: 'Active'
               });
             }
-            state = 'InstalledInactive';
-            if (
-              forceActivate &&
-              Date.now() - start >= waitTimeUntilForceActivate
-            ) {
-              await extension.activate();
-            }
-          } else if (install) {
-            await ExtensionInstaller.installExtension(provider);
+            state = 'Inactive';
           } else {
             clearInterval(interval);
             resolve({
               success: false,
-              message: `Extension ${provider} is not installed.`,
-              state: 'NotInstalled'
+              message: `Extension ${provider} is not installed or disabled.`,
+              state: 'Unavailable'
             });
           }
         }, waitInterval);
       });
     };
 
-    const timeoutPromise = new Promise<ServiceWaitResult>((_, reject) =>
-      setTimeout(() => {
+    clearInterval(interval);
+
+    const timeoutPromise = new Promise<ServiceWaitResult>((resolve, reject) =>
+      setTimeout(async () => {
         const errorMessage = `Extension ${provider} did not become active within ${timeout}ms`;
-        if (throwOnTimeout) {
+        if (forceActivate) {
+          const extension = extensionManager.getExtensionState(provider);
+          if (extension) {
+            try {
+              await extension.activate();
+              resolve({
+                success: true,
+                message: `Extension ${provider} is active.`,
+                state: 'Active'
+              });
+            } catch (error) {
+              reject(error);
+            }
+          } else {
+            reject(
+              new Error(`Extension ${provider} is not installed or disabled.`)
+            );
+          }
+        } else if (throwOnTimeout) {
           reject(new Error(errorMessage));
         } else {
-          Promise.resolve({ success: false, message: errorMessage, state });
+          resolve({ success: false, message: errorMessage, state });
         }
       }, timeout)
     );
 
     return Promise.race([checkExtensionState(), timeoutPromise]);
   }
-  public refresh() {
-    this.initializeExtensionStates();
+
+  private static validateWaitOptions(timeout: number, waitInterval: number) {
+    if (timeout < 0) {
+      throw new Error('Timeout must be a positive number');
+    }
+    if (waitInterval < 0) {
+      throw new Error('waitInterval must be a positive number');
+    }
+
+    if (timeout < waitInterval) {
+      throw new Error('Timeout must be greater than or equal to waitInterval');
+    }
+  }
+
+  public refresh(): Promise<void> {
+    return this.initializeExtensionStates();
+  }
+
+  private setupExtensionChangeHandler() {
+    vscode.extensions.onDidChange(this.handleExtensionChange.bind(this));
   }
 }
