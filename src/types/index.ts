@@ -11,11 +11,29 @@ import { LLMServiceInterface } from './llmService';
 
 export const SFDX_CORE_EXTENSION_NAME = 'salesforcedx-vscode-core';
 
+export type ServiceProviders =
+  | 'salesforce.salesforcedx-vscode-core'
+  | 'salesforce.salesforcedx-einstein-gpt';
+
 export enum ServiceType {
   Logger = 'Logger',
   Telemetry = 'Telemetry',
   LLMService = 'LLMService'
 }
+
+// Define a ServiceVersionMap interface
+interface ServiceVersionMap {
+  [ServiceType.Logger]: string;
+  [ServiceType.Telemetry]: string;
+  [ServiceType.LLMService]: string;
+}
+
+// Create a supportedVersions object to hold the supported versions for each service type
+export const supportedVersions: ServiceVersionMap = {
+  [ServiceType.Logger]: '1.0.0',
+  [ServiceType.Telemetry]: '1.2.0',
+  [ServiceType.LLMService]: '2.1.0'
+};
 
 // Define a mapping from service types to their corresponding parameter types
 interface ServiceParamsMap {
@@ -23,6 +41,20 @@ interface ServiceParamsMap {
   [ServiceType.Telemetry]: [string | undefined];
   [ServiceType.LLMService]: [string];
 }
+
+// Define a ServiceTypeToProviderMap interface
+interface ServiceTypeToProviderMap {
+  [ServiceType.Logger]: ServiceProviders;
+  [ServiceType.Telemetry]: ServiceProviders;
+  [ServiceType.LLMService]: ServiceProviders;
+}
+
+// Create a serviceTypeToProvider object to hold the mapping
+export const serviceTypeToProvider: ServiceTypeToProviderMap = {
+  [ServiceType.Logger]: 'salesforce.salesforcedx-vscode-core',
+  [ServiceType.Telemetry]: 'salesforce.salesforcedx-vscode-core',
+  [ServiceType.LLMService]: 'salesforce.salesforcedx-einstein-gpt'
+};
 
 // Define a mapping from service types to their corresponding return types
 interface ServiceReturnTypeMap {
@@ -100,6 +132,49 @@ export const ServiceInstanceValidators: {
     }
   }
 };
+
+export interface WaitOptions {
+  timeout: number;
+  waitInterval?: number;
+  forceActivate?: boolean; // TODO: forceActivate and throwOnTimeout are mutually exclusive, consider combining them into a single option
+  throwOnTimeout?: boolean;
+}
+
+export const isWaitOptions = (obj: unknown): obj is WaitOptions => {
+  return obj && typeof obj === 'object' && 'timeout' in obj;
+};
+
+export const normalizeWaitOptions = (
+  options: Partial<WaitOptions>
+): WaitOptions => {
+  const { timeout, waitInterval, forceActivate, throwOnTimeout } = options;
+
+  return {
+    timeout,
+    waitInterval,
+    forceActivate,
+    throwOnTimeout: throwOnTimeout ?? true
+  };
+};
+
+export type ExtensionState = 'Unavailable' | 'Inactive' | 'Active';
+
+export type ServiceWaitResult = {
+  success: boolean;
+  message: string;
+  state: ExtensionState;
+};
+
+export type ServiceGetResult<T extends ServiceType> = ServiceWaitResult & {
+  service: ServiceReturnType<T> | undefined;
+};
+
+export const isServiceGetResult = (
+  obj: unknown
+): obj is ServiceGetResult<never> => {
+  return obj && typeof obj === 'object' && 'success' in obj;
+};
+
 export * from './logger/loggerTypes';
 export * from './telemetry/telemetryTypes';
 export * from './llmService';

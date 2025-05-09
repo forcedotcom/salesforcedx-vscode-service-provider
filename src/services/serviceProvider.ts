@@ -5,14 +5,19 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import {
+  isWaitOptions,
+  ServiceGetResult,
   ServiceInstanceValidators,
   ServiceParams,
   ServiceReturnType,
   ServiceType,
-  ServiceValidators
+  serviceTypeToProvider,
+  ServiceValidators,
+  WaitOptions
 } from '../types';
 import * as vscode from 'vscode';
 import { llmServiceCommand, loggerCommand, telemetryCommand } from '../index';
+import { ExtensionManager } from '../extensions';
 
 /**
  * The ServiceProvider class is a utility class that provides services of different types.
@@ -51,6 +56,113 @@ export class ServiceProvider {
     instanceName?: string,
     ...rest: ServiceParams<T>[]
   ): Promise<ServiceReturnType<T>> {
+    const { serviceInstance, correctedInstanceName } =
+      ServiceProvider.resolveServiceInstance(type, instanceName);
+
+    if (!serviceInstance) {
+      const command = ServiceProvider.getCommandString(type);
+      await ServiceProvider.checkCommandAvailability(command);
+      return ServiceProvider.materializeService<T>(
+        type,
+        correctedInstanceName,
+        ...rest
+      );
+    }
+
+    return serviceInstance;
+  }
+
+  /**
+   * Retrieves a service instance of the specified type and instance name, waiting for the service to become available if necessary.
+   * If the service instance does not exist, it will be created.
+   * @template T - The type of the service.
+   * @param {T} type - The type of the service.
+   * @param {string} [instanceName] - The name of the service instance.
+   * @param {WaitOptions} [options] - Options for waiting for the service to become available.
+   * @param {...ServiceParams<T>} parameters - Additional parameters for the service.
+   * @returns {Promise<ServiceReturnType<T>>} The service instance.
+   */
+  static async getServiceWithWait<T extends ServiceType>(
+    type: T,
+    instanceName?: string,
+    options?: WaitOptions,
+    ...parameters: ServiceParams<T>[]
+  ): Promise<ServiceGetResult<T>>;
+
+  /**
+   * Retrieves a service instance of the specified type and instance name, waiting for the service to become available if necessary.
+   * If the service instance does not exist, it will be created.
+   * @template T - The type of the service.
+   * @param {T} type - The type of the service.
+   * @param {string} [instanceName] - The name of the service instance.
+   * @param {...ServiceParams<T>} parameters - Additional parameters for the service.
+   * @returns {Promise<ServiceReturnType<T>>} The service instance.
+   */
+  static async getServiceWithWait<T extends ServiceType>(
+    type: T,
+    instanceName?: string,
+    ...parameters: ServiceParams<T>[]
+  ): Promise<ServiceGetResult<T>>;
+
+  /**
+   * Retrieves a service instance of the specified type and instance name, waiting for the service to become available if necessary.
+   * If the service instance does not exist, it will be created.
+   * @template T - The type of the service.
+   * @param type - The type of the service.
+   * @param [instanceName] - The name of the service instance.
+   * @param [optionsOrParameter] - Options for waiting for the service to become available or additional parameters for the service.
+   * @param rest - Additional parameters for the service.
+   * @returns The service instance.
+   * @private
+   */
+  static async getServiceWithWait<T extends ServiceType>(
+    type: T,
+    instanceName?: string,
+    optionsOrParameter?: WaitOptions | ServiceParams<T>,
+    ...rest: ServiceParams<T>[]
+  ): Promise<ServiceGetResult<T>> {
+    let options: WaitOptions | undefined;
+    let params: ServiceParams<T>[] = [];
+    if (isWaitOptions(optionsOrParameter)) {
+      options = optionsOrParameter;
+    } else {
+      params = optionsOrParameter ? [optionsOrParameter, ...rest] : rest;
+    }
+
+    const { serviceInstance, correctedInstanceName } =
+      ServiceProvider.resolveServiceInstance(type, instanceName);
+
+    let result: ServiceGetResult<T> = {
+      success: false,
+      message: '',
+      state: 'Unavailable',
+      service: undefined
+    };
+
+    if (!serviceInstance) {
+      const command = ServiceProvider.getCommandString(type);
+      const waitResult = await ExtensionManager.waitForExtensionToBecomeActive(
+        serviceTypeToProvider[type],
+        options
+      );
+      result = { ...waitResult, service: undefined };
+      if (waitResult.success) {
+        await ServiceProvider.checkCommandAvailability(command);
+        result.service = await ServiceProvider.materializeService<T>(
+          type,
+          correctedInstanceName,
+          ...params
+        );
+      }
+    }
+
+    return result;
+  }
+
+  private static resolveServiceInstance<T extends ServiceType>(
+    type: T,
+    instanceName: string
+  ) {
     let serviceInstance: ServiceReturnType<T> | undefined;
 
     // Validate and correct instance name
@@ -66,18 +178,7 @@ export class ServiceProvider {
         ) as ServiceReturnType<T>;
       }
     }
-
-    if (!serviceInstance) {
-      const command = ServiceProvider.getCommandString(type);
-      await ServiceProvider.checkCommandAvailability(command);
-      serviceInstance = await ServiceProvider.materializeService<T>(
-        type,
-        correctedInstanceName,
-        ...rest
-      );
-    }
-
-    return serviceInstance;
+    return { serviceInstance, correctedInstanceName };
   }
 
   /**
