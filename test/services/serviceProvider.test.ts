@@ -34,7 +34,7 @@ class TelemetryService implements TelemetryServiceInterface {
 
   dispose(): void {}
 
-  getEndHRTime(hrstart: [number, number]): number {
+  getEndHRTime(hrstart: number): number {
     return 0;
   }
 
@@ -44,10 +44,6 @@ class TelemetryService implements TelemetryServiceInterface {
 
   getTelemetryReporterName(): string {
     return '';
-  }
-
-  hrTimeToMilliseconds(hrtime: [number, number]): number {
-    return 0;
   }
 
   initializeService(extensionContext: ExtensionContext): Promise<void> {
@@ -75,7 +71,7 @@ class TelemetryService implements TelemetryServiceInterface {
 
   sendCommandEvent(
     commandName?: string,
-    hrstart?: [number, number],
+    hrstart?: number,
     properties?: Properties,
     measurements?: Measurements
   ): void {}
@@ -89,7 +85,7 @@ class TelemetryService implements TelemetryServiceInterface {
   sendException(name: string, message: string): void {}
 
   sendExtensionActivationEvent(
-    hrstart: [number, number],
+    hrstart: number,
     markEndTime?: number,
     telemetryData?: TelemetryData
   ): void {}
