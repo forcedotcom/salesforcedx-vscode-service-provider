@@ -2,6 +2,7 @@
 const vscode = {
     commands: {
         executeCommand: jest.fn(),
+        getCommands: jest.fn(),
     },
 };
 

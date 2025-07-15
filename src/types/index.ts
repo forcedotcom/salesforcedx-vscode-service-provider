@@ -6,27 +6,23 @@
  */
 
 import { LoggerInterface } from './logger/loggerTypes';
-import { TelemetryServiceInterface } from './telemetry/telemetryTypes';
 import { LLMServiceInterface } from './llmService';
 
 export const SFDX_CORE_EXTENSION_NAME = 'salesforcedx-vscode-core';
 
 export enum ServiceType {
   Logger = 'Logger',
-  Telemetry = 'Telemetry',
   LLMService = 'LLMService'
 }
 
 // Define a mapping from service types to their corresponding parameter types
 interface ServiceParamsMap {
   [ServiceType.Logger]: [string]; // Logger requires a string parameter
-  [ServiceType.Telemetry]: [string | undefined];
   [ServiceType.LLMService]: [string];
 }
 
 // Define a mapping from service types to their corresponding return types
 interface ServiceReturnTypeMap {
-  [ServiceType.Telemetry]: TelemetryServiceInterface;
   [ServiceType.Logger]: LoggerInterface;
   [ServiceType.LLMService]: LLMServiceInterface;
 }
@@ -55,13 +51,6 @@ export const ServiceValidators: {
       return params;
     }
   },
-  [ServiceType.Telemetry]: {
-    validateAndCorrect(
-      params: ServiceParams<ServiceType.Telemetry>
-    ): ServiceParams<ServiceType.Telemetry> {
-      return params;
-    }
-  },
   [ServiceType.LLMService]: {
     validateAndCorrect(
       params: ServiceParams<ServiceType.LLMService>
@@ -86,11 +75,6 @@ export const ServiceInstanceValidators: {
       return instanceName || 'defaultLoggerInstance';
     }
   },
-  [ServiceType.Telemetry]: {
-    validateAndCorrect(instanceName: string): string {
-      return instanceName || SFDX_CORE_EXTENSION_NAME;
-    }
-  },
   [ServiceType.LLMService]: {
     validateAndCorrect(extensionName: string): string {
       if (!extensionName) {
@@ -101,5 +85,4 @@ export const ServiceInstanceValidators: {
   }
 };
 export * from './logger/loggerTypes';
-export * from './telemetry/telemetryTypes';
 export * from './llmService';
