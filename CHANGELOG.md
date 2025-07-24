@@ -1,3 +1,7 @@
+## [1.4.1](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.4.0...1.4.1) (2025-07-24)
+
+
+
 # [1.4.0](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.3.0-rc.6.6...1.4.0) (2025-03-05)
 
 
