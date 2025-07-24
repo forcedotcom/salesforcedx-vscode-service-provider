@@ -26,13 +26,13 @@ Ensure that you have [Yarn](https://yarnpkg.com/) installed, then run:
 $ yarn install
 $ yarn build
 ```
-### Using the Library 
+### Using the Library
 
 Install the library locally by adding this information to your project's `package.json`:
 
 ```
 "@salesforce/vscode-service-provider": "file://path/to/salesforcedx-vscode-service-provider" (Windows)
-or 
+or
 "@salesforce/vscode-service-provider": "/Users/myUser/path/to/salesforcedx-vscode-service-provider" (MacOS)
 ```
 
@@ -73,10 +73,10 @@ Here are the main capabilities of the `ServiceProvider` class:
 - `clearAllServices()`: Removes all services, including all their instances.
 
 ### Example of adding a new service named MyHelloPlanet
-The implementation of the service requires a planet name for the instance name. 
+The implementation of the service requires a planet name for the instance name.
 The MyHelloPlanet class has a single method called "hello", which takes a parameter named "name".
 
-To add a new service type named `MyHelloPlanet`, you need to modify the `ServiceType` enum and add the new service type. 
+To add a new service type named `MyHelloPlanet`, you need to modify the `ServiceType` enum and add the new service type.
 You also need to update the `ServiceParamsMap` and `ServiceReturnType` types to handle the new service type.
 
 Here's how you can do it:
@@ -89,7 +89,7 @@ export enum ServiceType {
 
 // Define a mapping from service types to their corresponding parameter types
 interface ServiceParamsMap {
-  [ServiceType.Logger]: [string]; // TelemetryService requires a string parameter
+  [ServiceType.Logger]: [string]; // LoggerService requires a string parameter
   [ServiceType.MyHelloPlanet]: [string]; // MyHelloPlanet requires a string parameter
 }
 
@@ -105,7 +105,7 @@ export type ServiceReturnType<T extends ServiceType> =
   never;
 ```
 
-Next, you need to create an interface that describes the `MyHelloPlanet` implementation. 
+Next, you need to create an interface that describes the `MyHelloPlanet` implementation.
 This interface should have a `hello` method that takes a `name` parameter:
 
 ```typescript
