@@ -8,10 +8,17 @@ import * as vscode from 'vscode';
 import {
   ServiceType,
   ServiceProvider,
-  loggerCommand,
-  LoggerInterface,
-  LoggerLevel
+  TelemetryServiceInterface,
+  TelemetryReporter,
+  ActivationInfo,
+  Properties,
+  Measurements,
+  TelemetryData,
+  SFDX_CORE_EXTENSION_NAME,
+  telemetryCommand,
+  loggerCommand
 } from '../../src';
+import { ExtensionContext, ExtensionMode } from 'vscode';
 
 jest.mock('vscode-test', () => ({
   commands: {
@@ -19,27 +26,93 @@ jest.mock('vscode-test', () => ({
   }
 }));
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+class TelemetryService implements TelemetryServiceInterface {
+  checkCliTelemetry(): Promise<boolean> {
+    return Promise.resolve(false);
+  }
+
+  dispose(): void {}
+
+  getEndHRTime(hrstart: [number, number]): number {
+    return 0;
+  }
+
+  getReporters(): TelemetryReporter[] {
+    return [];
+  }
+
+  getTelemetryReporterName(): string {
+    return '';
+  }
+
+  hrTimeToMilliseconds(hrtime: [number, number]): number {
+    return 0;
+  }
+
+  initializeService(extensionContext: ExtensionContext): Promise<void> {
+    return Promise.resolve(undefined);
+  }
+
+  initializeServiceWithAttributes(
+    name: string,
+    apiKey?: string,
+    version?: string,
+    extensionMode?: ExtensionMode
+  ): Promise<void> {
+    return Promise.resolve(undefined);
+  }
+
+  isTelemetryEnabled(): Promise<boolean> {
+    return Promise.resolve(false);
+  }
+
+  isTelemetryExtensionConfigurationEnabled(): boolean {
+    return false;
+  }
+
+  sendActivationEventInfo(activationInfo: ActivationInfo): void {}
+
+  sendCommandEvent(
+    commandName?: string,
+    hrstart?: [number, number],
+    properties?: Properties,
+    measurements?: Measurements
+  ): void {}
+
+  sendEventData(
+    eventName: string,
+    properties?: { [p: string]: string },
+    measures?: { [p: string]: number }
+  ): void {}
+
+  sendException(name: string, message: string): void {}
+
+  sendExtensionActivationEvent(
+    hrstart: [number, number],
+    markEndTime?: number,
+    telemetryData?: TelemetryData
+  ): void {}
+
+  sendExtensionDeactivationEvent(): void {}
+
+  setCliTelemetryEnabled(isEnabled: boolean): void {}
+}
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 describe('ServiceProvider', () => {
   beforeEach(() => {
     ServiceProvider.clearAllServices();
     (vscode.commands.executeCommand as jest.Mock).mockClear();
-
-    // Mock ServiceProvider.getCommands to return available commands by default
-    jest
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .spyOn(ServiceProvider as any, 'getCommands')
-      .mockImplementation(() => {
-        return Promise.resolve([loggerCommand, 'some.other.command']);
-      });
-  });
-
-  afterEach(() => {
-    jest.restoreAllMocks();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    jest.spyOn(ServiceProvider as any, 'getCommands').mockImplementation(() => {
+      return Promise.resolve([telemetryCommand, loggerCommand]);
+    });
   });
 
   it('should correctly identify that a service is available if the associated command is registered', async () => {
     const isAvailable = await ServiceProvider.isServiceAvailable(
-      ServiceType.Logger
+      ServiceType.Telemetry
     );
     expect(isAvailable).toBe(true);
   });
@@ -49,10 +122,10 @@ describe('ServiceProvider', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .spyOn(ServiceProvider as any, 'getCommands')
       .mockImplementation(() => {
-        return Promise.resolve(['some.other.command']);
+        return Promise.resolve([loggerCommand]);
       });
     const isAvailable = await ServiceProvider.isServiceAvailable(
-      ServiceType.Logger
+      ServiceType.Telemetry
     );
     expect(isAvailable).toBe(false);
   });
@@ -63,7 +136,7 @@ describe('ServiceProvider', () => {
     );
 
     const service = await ServiceProvider.getService(
-      ServiceType.Logger,
+      ServiceType.Telemetry,
       'mockService'
     );
     expect(service).toBe('mockService');
@@ -74,11 +147,11 @@ describe('ServiceProvider', () => {
       'mockService'
     );
 
-    const service = await ServiceProvider.getService(ServiceType.Logger);
+    const service = await ServiceProvider.getService(ServiceType.Telemetry);
     expect(service).toBe('mockService');
     const hasService = ServiceProvider.has(
-      ServiceType.Logger,
-      'defaultLoggerInstance'
+      ServiceType.Telemetry,
+      SFDX_CORE_EXTENSION_NAME
     );
     expect(hasService).toBe(true);
   });
@@ -87,14 +160,14 @@ describe('ServiceProvider', () => {
     (vscode.commands.executeCommand as jest.Mock).mockResolvedValue(
       'mockService'
     );
-    await ServiceProvider.getService(ServiceType.Logger, 'mockService');
-    const hasService = ServiceProvider.hasService(ServiceType.Logger);
+    await ServiceProvider.getService(ServiceType.Telemetry, 'mockService');
+    const hasService = ServiceProvider.hasService(ServiceType.Telemetry);
     expect(hasService).toBe(true);
   });
 
   it('should check if a service instance exists', async () => {
-    await ServiceProvider.getService(ServiceType.Logger, 'instance1');
-    const hasInstance = ServiceProvider.has(ServiceType.Logger, 'instance1');
+    await ServiceProvider.getService(ServiceType.Telemetry, 'instance1');
+    const hasInstance = ServiceProvider.has(ServiceType.Telemetry, 'instance1');
     expect(hasInstance).toBe(true);
   });
 
@@ -102,9 +175,9 @@ describe('ServiceProvider', () => {
     (vscode.commands.executeCommand as jest.Mock).mockResolvedValue(
       'mockService'
     );
-    await ServiceProvider.getService(ServiceType.Logger, 'instance1');
-    ServiceProvider.remove(ServiceType.Logger, 'instance1');
-    const hasInstance = ServiceProvider.has(ServiceType.Logger, 'instance1');
+    await ServiceProvider.getService(ServiceType.Telemetry, 'instance1');
+    ServiceProvider.remove(ServiceType.Telemetry, 'instance1');
+    const hasInstance = ServiceProvider.has(ServiceType.Telemetry, 'instance1');
     expect(hasInstance).toBe(false);
   });
 
@@ -112,9 +185,9 @@ describe('ServiceProvider', () => {
     (vscode.commands.executeCommand as jest.Mock).mockResolvedValue(
       'mockService'
     );
-    await ServiceProvider.getService(ServiceType.Logger, 'instance1');
-    ServiceProvider.removeService(ServiceType.Logger);
-    const hasService = ServiceProvider.hasService(ServiceType.Logger);
+    await ServiceProvider.getService(ServiceType.Telemetry, 'instance1');
+    ServiceProvider.removeService(ServiceType.Telemetry);
+    const hasService = ServiceProvider.hasService(ServiceType.Telemetry);
     expect(hasService).toBe(false);
   });
 
@@ -122,63 +195,52 @@ describe('ServiceProvider', () => {
     (vscode.commands.executeCommand as jest.Mock).mockResolvedValue(
       'mockService'
     );
-    await ServiceProvider.getService(ServiceType.Logger, 'instance1');
-    await ServiceProvider.getService(ServiceType.Logger, 'instance2');
+    await ServiceProvider.getService(ServiceType.Telemetry, 'instance1');
+    await ServiceProvider.getService(ServiceType.Telemetry, 'instance2');
     ServiceProvider.clearAllServices();
-    const hasService = ServiceProvider.hasService(ServiceType.Logger);
+    const hasService = ServiceProvider.hasService(ServiceType.Telemetry);
     expect(hasService).toBe(false);
   });
 
   it('should set a new service instance successfully', () => {
-    const mockLogger: LoggerInterface = {
-      getName: () => 'test-logger',
-      getLevel: () => LoggerLevel.INFO,
-      setLevel: () => mockLogger,
-      shouldLog: () => true,
-      getBufferedRecords: () => [],
-      readLogContentsAsText: () => '',
-      child: () => mockLogger,
-      addField: () => mockLogger,
-      trace: () => mockLogger,
-      debug: () => mockLogger,
-      info: () => mockLogger,
-      warn: () => mockLogger,
-      error: () => mockLogger,
-      fatal: () => mockLogger
-    };
-    ServiceProvider.setService(ServiceType.Logger, 'instance1', mockLogger);
-    const hasInstance = ServiceProvider.has(ServiceType.Logger, 'instance1');
+    const telemetryServiceInstance = new TelemetryService(); // create a real instance of TelemetryService
+    ServiceProvider.setService(
+      ServiceType.Telemetry,
+      'instance1',
+      telemetryServiceInstance
+    );
+    const hasInstance = ServiceProvider.has(ServiceType.Telemetry, 'instance1');
     expect(hasInstance).toBe(true);
   });
 
   it('should throw an error when trying to set a service instance that already exists', () => {
-    const mockLogger: LoggerInterface = {
-      getName: () => 'test-logger',
-      getLevel: () => LoggerLevel.INFO,
-      setLevel: () => mockLogger,
-      shouldLog: () => true,
-      getBufferedRecords: () => [],
-      readLogContentsAsText: () => '',
-      child: () => mockLogger,
-      addField: () => mockLogger,
-      trace: () => mockLogger,
-      debug: () => mockLogger,
-      info: () => mockLogger,
-      warn: () => mockLogger,
-      error: () => mockLogger,
-      fatal: () => mockLogger
-    };
-    ServiceProvider.setService(ServiceType.Logger, 'instance1', mockLogger);
+    const telemetryServiceInstance = new TelemetryService(); // create a real instance of TelemetryService
+    ServiceProvider.setService(
+      ServiceType.Telemetry,
+      'instance1',
+      telemetryServiceInstance
+    );
     expect(() => {
-      ServiceProvider.setService(ServiceType.Logger, 'instance1', mockLogger);
+      ServiceProvider.setService(
+        ServiceType.Telemetry,
+        'instance1',
+        telemetryServiceInstance
+      );
     }).toThrow(
-      new Error('Service instance instance1 of type Logger already exists')
+      new Error('Service instance instance1 of type Telemetry already exists')
     );
   });
   describe('getCommandString', () => {
     it('should return the correct command string for Logger service type', () => {
       const command = ServiceProvider['getCommandString'](ServiceType.Logger);
       expect(command).toBe(loggerCommand);
+    });
+
+    it('should return the correct command string for Telemetry service type', () => {
+      const command = ServiceProvider['getCommandString'](
+        ServiceType.Telemetry
+      );
+      expect(command).toBe(telemetryCommand);
     });
 
     it('should throw an error for unsupported service type', () => {
@@ -201,7 +263,7 @@ describe('ServiceProvider', () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .spyOn(ServiceProvider as any, 'getCommands')
         .mockImplementation(() => {
-          return Promise.resolve(['some.other.command']);
+          return Promise.resolve([telemetryCommand]);
         });
       await expect(
         ServiceProvider['checkCommandAvailability'](loggerCommand)
