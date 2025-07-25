@@ -1,3 +1,12 @@
+## [1.4.2](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.4.1...1.4.2) (2025-07-25)
+
+
+### Reverts
+
+* Revert "chore: W-18587324 - removing telemetry code from package (#222)" (#228) ([197230e](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/197230e8d0f8e5b96162e3707e5597592c0c84bd)), closes [#222](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/issues/222) [#228](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/issues/228)
+
+
+
 ## [1.4.1](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.4.0...1.4.1) (2025-07-24)
 
 
