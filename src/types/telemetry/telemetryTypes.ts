@@ -55,7 +55,7 @@ export type ExtensionsInfo = {
 };
 
 export type ActivationInfo = Partial<ExtensionInfo> & {
-  startActivateHrTime: [number, number];
+  startActivateHrTime: [number, number] | number;
   activateStartDate: Date;
   activateEndDate?: Date;
   extensionActivationTime: number;
@@ -90,7 +90,7 @@ export interface TelemetryServiceInterface {
   sendActivationEventInfo(activationInfo: ActivationInfo): void;
 
   sendExtensionActivationEvent(
-    hrstart: [number, number],
+    hrstart: [number, number] | number,
     markEndTime?: number,
     telemetryData?: TelemetryData
   ): void;
@@ -99,7 +99,7 @@ export interface TelemetryServiceInterface {
 
   sendCommandEvent(
     commandName?: string,
-    hrstart?: [number, number],
+    hrstart?: [number, number] | number,
     properties?: Properties,
     measurements?: Measurements
   ): void;
@@ -114,7 +114,7 @@ export interface TelemetryServiceInterface {
 
   dispose(): void;
 
-  getEndHRTime(hrstart: [number, number]): number;
+  getEndHRTime(hrstart: [number, number] | number): number;
 
-  hrTimeToMilliseconds(hrtime: [number, number]): number;
+  hrTimeToMilliseconds(hrtime: [number, number] | number): number;
 }
