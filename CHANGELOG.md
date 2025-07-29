@@ -1,3 +1,12 @@
+# [1.5.0](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.4.2...1.5.0) (2025-07-29)
+
+
+### Features
+
+* making the interface forwards compatible ([3cac9f8](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/3cac9f8816c5181882d03208f790bf45be0dee05))
+
+
+
 ## [1.4.2](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.4.1...1.4.2) (2025-07-25)
 
 
