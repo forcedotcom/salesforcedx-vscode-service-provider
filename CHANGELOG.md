@@ -1,3 +1,12 @@
+## [1.5.1](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.5.0...1.5.1) (2026-03-20)
+
+
+### Bug Fixes
+
+* **deps:** bump flatted from 3.3.1 to 3.4.2 ([36cbc08](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/36cbc08d2a8b257d80f32e57e768b11bb5f5d041))
+
+
+
 # [1.5.0](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.4.2...1.5.0) (2025-07-29)
 
 
