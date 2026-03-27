@@ -1,3 +1,12 @@
+## [1.5.2](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.5.1...1.5.2) (2026-03-27)
+
+
+### Bug Fixes
+
+* **deps:** bump handlebars from 4.7.8 to 4.7.9 ([91bc348](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/91bc348a5254fbee059f3fa5f8d63b1d13cd1de8))
+
+
+
 ## [1.5.1](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.5.0...1.5.1) (2026-03-20)
 
 
