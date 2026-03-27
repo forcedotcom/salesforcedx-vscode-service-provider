@@ -1,3 +1,12 @@
+## [1.5.3](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.5.2...1.5.3) (2026-03-27)
+
+
+### Bug Fixes
+
+* **deps:** bump picomatch from 2.3.1 to 2.3.2 ([57c55fe](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/57c55fef8d547f5e65a5107725afd2098c22a520))
+
+
+
 ## [1.5.2](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.5.1...1.5.2) (2026-03-27)
 
 
