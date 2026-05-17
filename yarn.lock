@@ -845,10 +845,10 @@
   resolved "https://registry.yarnpkg.com/@pkgr/core/-/core-0.2.9.tgz#d229a7b7f9dac167a156992ef23c7f023653f53b"
   integrity sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==
 
-"@salesforce/dev-config@^4.3.2":
-  version "4.3.2"
-  resolved "https://registry.yarnpkg.com/@salesforce/dev-config/-/dev-config-4.3.2.tgz#10047e2b8d289c93f157ab4243a1b1de57f2d6a2"
-  integrity sha512-mxhsWV1rzHfhGMVSFQRLOHZTGfB1R2FtqbuIb3hrgDFsW1NLjEDS2U+eZWBJiCYod1JeGpJxnETNq587lem1Gg==
+"@salesforce/dev-config@^4.3.3":
+  version "4.3.3"
+  resolved "https://registry.yarnpkg.com/@salesforce/dev-config/-/dev-config-4.3.3.tgz#65650087baa542a905ad4e8b38a5c5302f7f009a"
+  integrity sha512-dr2IuZNP759p9iSW72lFmOki9/sqHfMHgEzCt+okVuBsRG5/fPuBNhGVse6abCqCvaqBxzD73IwFyZ979MNd7w==
 
 "@sinclair/typebox@^0.27.8":
   version "0.27.8"
