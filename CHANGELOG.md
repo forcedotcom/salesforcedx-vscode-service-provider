@@ -1,3 +1,12 @@
+## [1.5.4](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.5.3...1.5.4) (2026-06-21)
+
+
+### Bug Fixes
+
+* **deps:** bump @babel/core from 7.24.3 to 7.29.7 ([cbf5bd0](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/cbf5bd0ce2b74b114957bb68b5570a0817168694))
+
+
+
 ## [1.5.3](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.5.2...1.5.3) (2026-03-27)
 
 
