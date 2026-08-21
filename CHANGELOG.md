@@ -1,3 +1,12 @@
+## [1.5.5](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.5.4...1.5.5) (2026-08-21)
+
+
+### Bug Fixes
+
+* configure yarn for shared workflows ([f74569b](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/f74569baa983d35207b69da4b78e0119c4976ffb))
+
+
+
 ## [1.5.4](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.5.3...1.5.4) (2026-06-21)
 
 
