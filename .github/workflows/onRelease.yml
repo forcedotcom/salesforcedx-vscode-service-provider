@@ -29,5 +29,7 @@ jobs:
       ctc: false
       tag: ${{ needs.getDistTag.outputs.tag || 'latest' }}
       githubTag: ${{ github.event.release.tag_name || inputs.tag }}
+      packageManager: yarn
+      cacheDependencyPath: yarn.lock
 
     secrets: inherit
