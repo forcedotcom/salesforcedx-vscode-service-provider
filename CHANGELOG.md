@@ -1,3 +1,12 @@
+## [1.5.6](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.5.5...1.5.6) (2026-09-06)
+
+
+### Bug Fixes
+
+* **deps:** bump browserslist from 4.28.2 to 4.28.9 ([5164de2](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/5164de2e6c18f1d15538958bb19a365e316ce53a))
+
+
+
 ## [1.5.5](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.5.4...1.5.5) (2026-08-21)
 
 
