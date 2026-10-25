@@ -1,3 +1,12 @@
+## [1.5.8](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.5.7...1.5.8) (2026-10-25)
+
+
+### Bug Fixes
+
+* **deps:** bump js-yaml from 3.14.1 to 3.15.2 ([faa9c58](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/commit/faa9c58fdb5a4e8efef07243c71381f9537b45f3))
+
+
+
 ## [1.5.7](https://github.com/forcedotcom/salesforcedx-vscode-service-provider/compare/1.5.6...1.5.7) (2026-10-11)
 
 
